@@ -78,10 +78,10 @@ function setup() {
   s[10] = "... What should I do?";
   s[11] = "press [T] to try to talk to the aliens / press[O] to observe silently";
 
-  a[1] = "They just keep staring at me without saying anything.";
-  a[2] = "press [S] to sit in the corner and observe";
-  a[3] = "'Hey! What do you want?'";
-  a[4] = "...";
+  a[1] = "'Hey! What do you want?'";
+  a[2] = "...";
+  a[3] = "They just keep staring at me without saying anything.";
+  a[4] = "press [S] to sit in the corner and observe";
 
   d[1] = "I'll just wait and see what's going to happen.";
   d[2] = "press [S] to sit in the corner and observe";
