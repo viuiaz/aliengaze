@@ -86,30 +86,30 @@ function setup() {
   d[1] = "I'll just wait and see what's going to happen.";
   d[2] = "press [S] to sit in the corner and observe";
 
-  f[1] = "What shoud I do?";
-  f[2] = "press [R] to crash the bars / press [P] to squeeze through the bars";
-  f[3] = "!";
-  f[4] = "Oh! No one's here now.";
+  f[1] = "!";
+  f[2] = "Oh! No one's here now.";
+  f[3] = "What shoud I do?";
+  f[4] = "press [R] to crash the bars / press [P] to squeeze through the bars";
 
-  g[1] = "press [1] to wake up";
-  g[2] = "After hours of waiting, I fell asleep.";
+  g[1] = "After hours of waiting, I fell asleep.";
+  g[2] = "press [1] to wake up";
 
-  h[1] = "... They are back! I don't know what they will do to me...";
-  h[2] = "press [H] to cower in the corner";
-  h[3] = "Ahhh... It hurts.. Maybe I should stop.";
-  h[4] = "...";
-  h[5] = "*footstep sounds*";
+  h[1] = "Ahhh... It hurts.. Maybe I should stop.";
+  h[2] = "*footstep sounds*";
+  h[3] = "...";
+  h[4] = "... They are back! I don't know what they will do to me...";
+  h[5] = "press [H] to cower in the corner";
 
   j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
   j[2] = "...What are they even saying? Please speak English!";
   j[3] = "press [z] to listen carefully";
-
-  k[1] = "And how many aliens are there?";
+    
+  k[1] = "...When I get more closer, they stopped talking.";
   k[2] = "...";
-  k[3] = "What did I do to deserve this?";
-  k[4] = "What should I do?";
-  k[5] = "press [2] to scream / press [3] to pace around";
-  k[6] = "...When I get more closer, they stopped talking.";
+  k[3] = "And how many aliens are there?";
+  k[4] = "What did I do to deserve this?";
+  k[5] = "What should I do?";
+  k[6] = "press [2] to scream / press [3] to pace around";
 
   l[1] = "'Ahhhhhhh!'";
   l[2] = "'Stop staring! Let me out!'";
@@ -132,19 +132,18 @@ function setup() {
   w[4] = "I've had enough of waiting.";
   w[5] = "What should I do?";
   w[6] = "press [5] to hit the wall with my head / [6] to crazy plucking my hair";
-  w[7] = "After hours of nothing, they left.";
 
-  e[1] = "It grabs my arm and injects something inside...";
-  e[2] = "... Getting... sleepy... again.";
-  e[3] = "...";
-  e[4] = "press [7] to wake up";
-  e[5] = "... Hurting myself actually feels good.. haha...";
-  e[6] = "... Wait! It's coming towards me!";
-  e[7] = "What is it going to do?";
-  e[8] = "... Is that a... syringe?";
-  e[9] = "'Wait! I'll stop! Please don't hurt me!'";
-  e[10] = "I keep yelling but it just keep getting closer and closer...";
-  e[11] = "...!";
+  e[1] = "... Hurting myself actually feels good.. haha...";
+  e[2] = "... Wait! It's coming towards me!";
+  e[3] = "What is it going to do?";
+  e[4] = "... Is that a... syringe?";
+  e[5] = "'Wait! I'll stop! Please don't hurt me!'";
+  e[6] = "I keep yelling but it just keep getting closer and closer...";
+  e[7] = "...!";
+  e[8] = "It grabs my arm and injects something inside...";
+  e[9] = "... Getting... sleepy... again.";
+  e[10] = "...";
+  e[11] = "press [7] to wake up";
 
   bb[1] = "I don't know how long I slept...";
   bb[2] = "But it seems like no one's around.";
