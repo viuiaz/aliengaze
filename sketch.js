@@ -28,32 +28,33 @@ var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //------------------------------
-// 決策場景分支對照表（所有含 "press" 的對話均視為決策，僅在最後一行才接受鍵盤輸入）
-//------------------------------
+// 決策場景分支對照表
+//（所有含 "press" 的對話均視為決策，僅在最後一行才接受鍵盤輸入）
+ //------------------------------
 var decisionMap = {
-  0: { z: 1, x: 2 },      // s[11] in scene 0
-  2: { z: 3, x: 3 },      // d[2] in scene 2
-  4: { z: 5, x: 5 },      // f[4] in scene 4
-  5: { z: 6, x: 6 },      // h[5] in scene 5
-  6: { z: 7, x: 7 },      // j[3] in scene 6
-  7: { z: 8, x: 9 },      // k[6] in scene 7
-  8: { z: 9, x: 9 },      // l[3] in scene 8
-  9: { z: 10, x: 10 },    // q[6] in scene 9
-  10: { z: 11, x: 11 },   // w[5] in scene 10
-  11: { z: 12, x: 12 },   // e[11] in scene 11
-  12: { z: 13, x: 14 },   // bb[22] in scene 12
-  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
-  14: { z: 15, x: 15 },   // ii[12] in scene 14
-  15: { z: 16, x: 16 },   // oo[5] in scene 15
-  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
-  17: { z: 18, x: 18 },   // jj[15] in scene 17
-  18: { z: 19, x: 19 },   // kk[8] in scene 18
-  19: { z: 20, x: 20 },   // vv[8] in scene 19
-  21: { z: 22, x: 22 }    // nn[16] in scene 21
+  0: { z: 1, x: 2 },      // s[11]
+  2: { z: 3, x: 3 },      // d[2]
+  4: { z: 5, x: 5 },      // f[4]
+  5: { z: 6, x: 6 },      // h[5]
+  6: { z: 7, x: 7 },      // j[3]
+  7: { z: 8, x: 9 },      // k[6]
+  8: { z: 9, x: 9 },      // l[3]
+  9: { z: 10, x: 10 },    // q[6]
+  10: { z: 11, x: 11 },   // w[5]
+  11: { z: 12, x: 12 },   // e[11]
+  12: { z: 13, x: 14 },   // bb[22]
+  13: { z: 15, x: 15 },   // ss[9]
+  14: { z: 15, x: 15 },   // ii[12]
+  15: { z: 16, x: 16 },   // oo[5]
+  16: { z: 17, x: 17 },   // cc[9] ("press [z] to try and survive")
+  17: { z: 18, x: 18 },   // jj[15]
+  18: { z: 19, x: 19 },   // kk[8]
+  19: { z: 20, x: 20 },   // vv[8]
+  21: { z: 22, x: 22 }    // nn[16]
 };
 
 //------------------------------
-// 轉場設定（非決策場景中，對話讀完後自動切換；左右結果相同）
+// 轉場設定（非決策場景，對話讀完後自動切換；左右結果相同）
 //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
@@ -359,8 +360,8 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 調整文字框上移：將 y 座標由 330 改為 300；高度設為 50
-    rect(15, 300, 680, 50);
+    // 將文字框上移，位置設為 y=280，寬680，高60
+    rect(15, 280, 680, 60);
     noStroke();
     fill(255);
     textSize(14);
@@ -385,7 +386,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 僅當目前行包含 "press" 且已為該陣列最後一筆時，才接受鍵盤輸入
+    // 只有當目前行為決策提示且為最後一行時，才接受鍵盤輸入
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -405,7 +406,7 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若目前行含有 "press" 且為最後一筆，則不接受鼠標點擊
+    // 若當前行為決策提示且為最後一行，則不接受鼠標點擊
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       return;
     }
@@ -463,8 +464,9 @@ function drawScene(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  text("- click to continue -", 248, 40);
-  text(textContent, 28, 350);
+  // 指定繪製文字區域 (x, y, width, height)
+  text("- click to continue -", 248, 290, 640, 40);
+  text(textContent, 28, 290, 640, 40);
 }
 
 //------------------------------
@@ -478,8 +480,8 @@ function drawSceneWithBars(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  text("- click to continue -", 248, 40);
-  text(textContent, 28, 350);
+  text("- click to continue -", 248, 290, 640, 40);
+  text(textContent, 28, 290, 640, 40);
 }
 
 function drawDialogueWithBars(bgImg) {
@@ -499,8 +501,8 @@ function drawDialogueWithBars(bgImg) {
   } else {
     prompt = "- click to continue -";
   }
-  text(prompt, 248, 40);
-  text(currentText, 28, 350);
+  text(prompt, 248, 290, 640, 40);
+  text(currentText, 28, 290, 640, 40);
 }
 
 //------------------------------
@@ -589,14 +591,14 @@ function draw() {
     switch (gameScene) {
       case 0: drawBaseScene(); break;
       case 1: drawSceneWithBars(a[u], alienlabImg); break;
-      case 2: drawSceneWithBars(d[y], alienlabImg); break;
+      case 2: drawDialogueWithBars(d[y], alienlabImg); break;
       case 3: drawScene(g[ee], null); break;
       case 4: drawSceneWithBars(f[r], withoutalienlabImg); break;
       case 5: drawSceneWithBars(h[t], withoutalienlabImg); break;
       case 6: drawSceneWithBars(j[qq], aliencrowd1Img); break;
       case 7: drawSceneWithBars(k[aa], aliencrowdImg); break;
-      case 8: drawSceneWithBars(l[b], aliencrowdImg); break;
-      case 9: drawScene(q[c], aliencrowdImg); break;
+      case 8: drawDialogueWithBars(l[b], aliencrowdImg); break;
+      case 9: drawDialogueWithBars(q[c], aliencrowdImg); break;
       case 10: drawSceneWithBars(w[dd], alienlabImg); break;
       case 11: drawTranquilizerScene(); break;
       case 12: drawBBScene(); break;
