@@ -4,9 +4,8 @@
 let sceneNumber = 0;   // 0 = 封面, 1 = 正式遊戲
 let gameScene = 0;    
 
-// 透明度控制
-let transparency = 255, transparency2 = 255, transparency3 = 0;
-let transparency4 = 255, transparency5 = 0, transparency6 = 255, transparency7 = 0;
+// 透明度控制（部分特殊場景使用）
+let transparency2 = 255, transparency3 = 0, transparency4 = 255, transparency5 = 0, transparency6 = 255, transparency7 = 0;
 
 // 圖片資源
 let startImg, alienlabImg, barsImg, withoutalienlabImg;
@@ -17,10 +16,9 @@ let ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 let SuperLegendBoy; 
 
 //-------------------------------------
-// 對話內容（各場景，採 1 為起始索引）
-// 注意：已移除任何「press ...」提示文字，對話最後一筆若為選擇提示，僅描述決策內容
+// 對話內容（採用 1 為起始索引，已移除所有鍵盤提示文字）
 //-------------------------------------
-// scene 0 (決策場景)
+// scene 0（決策場景）
 let s = [];
 s[1] = "..."; 
 s[2] = "... What?"; 
@@ -34,31 +32,31 @@ s[9] = "Wait. Why am I behind the bars? Am I in a cage?";
 s[10] = "... What should I do?";
 s[11] = "Do you try to talk to the aliens or observe silently?";
 
-// scene 1 (非決策)
+// scene 1（非決策）
 let a = [];
 a[1] = "'Hey! What do you want?'"; 
 a[2] = "...";
 a[3] = "They just keep staring at me without saying anything.";
 a[4] = "I decide to sit in the corner and observe.";
 
-// scene 2 (非決策)
+// scene 2（非決策）
 let d = [];
 d[1] = "I'll just wait and see what's going to happen.";
 d[2] = "I choose to sit in the corner and observe.";
 
-// scene 3 (非決策)
+// scene 3（非決策）
 let g = [];
 g[1] = "After hours of waiting, I fell asleep.";
 g[2] = "I wake up.";
 
-// scene 4 (非決策)
+// scene 4（非決策）
 let f = [];
 f[1] = "!";
 f[2] = "Oh! No one's here now.";
 f[3] = "What should I do?";
 f[4] = "I must decide whether to crash the bars or squeeze through.";
 
-// scene 5 (非決策)
+// scene 5（非決策）
 let h = [];
 h[1] = "Ahhh... It hurts... Maybe I should stop.";
 h[2] = "*footstep sounds*";
@@ -66,13 +64,13 @@ h[3] = "...";
 h[4] = "They are back! I don't know what they will do to me...";
 h[5] = "I cower in the corner.";
 
-// scene 6 (非決策)
+// scene 6（非決策）
 let j = [];
 j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
 j[2] = "...What are they even saying? I wish they spoke English.";
 j[3] = "I listen carefully.";
 
-// scene 7 (決策場景)
+// scene 7（決策場景）
 let k = [];
 k[1] = "When I got closer, they stopped talking.";
 k[2] = "...";
@@ -81,7 +79,7 @@ k[4] = "What did I do to deserve this?";
 k[5] = "What should I do?";
 k[6] = "Do I scream or pace around?";
 
-// scene 8 (非決策)
+// scene 8（非決策）
 let l = [];
 l[1] = "'Ahhhhhhh!'";
 l[2] = "'Stop staring! Let me out!'";
@@ -91,7 +89,7 @@ l[5] = "One of them frowned, but nothing happened.";
 l[6] = "I feel tired after all the yelling.";
 l[7] = "I settle down in the corner.";
 
-// scene 9 (非決策)
+// scene 9（非決策）
 let q = [];
 q[1] = "I start walking around...";
 q[2] = "I feel a slight easing of my anxiety.";
@@ -100,7 +98,7 @@ q[4] = "One of them frowned, yet nothing happened.";
 q[5] = "I begin to feel tired.";
 q[6] = "I decide to rest in the corner.";
 
-// scene 10 (非決策)
+// scene 10（非決策）
 let w = [];
 w[1] = "Now it's just me... and them.";
 w[2] = "Again.";
@@ -109,7 +107,7 @@ w[4] = "I've had enough of waiting.";
 w[5] = "What should I do?";
 w[6] = "I choose between hitting the wall with my head or wildly plucking my hair.";
 
-// scene 11 (非決策)
+// scene 11（非決策）
 let e = [];
 e[1] = "Somehow, hurting myself feels oddly relieving...";
 e[2] = "Wait! Something is coming toward me!";
@@ -123,7 +121,7 @@ e[9] = "I feel drowsy again.";
 e[10] = "...";
 e[11] = "I wake up.";
 
-// scene 12 (非決策)
+// scene 12（非決策）
 let bb = [];
 bb[1] = "I don't know how long I slept...";
 bb[2] = "But no one seems to be around.";
@@ -148,7 +146,7 @@ bb[20] = "It almost seems as if an alien sympathizes with me.";
 bb[21] = "What should I do?";
 bb[22] = "Do I use the key or stay put?";
 
-// scene 13 (非決策)
+// scene 13（非決策）
 let ss = [];
 ss[1] = "This is my only chance.";
 ss[2] = "I squat down and grab the key.";
@@ -160,7 +158,7 @@ ss[7] = "...";
 ss[8] = "I run out without hesitation.";
 ss[9] = "I escape.";
 
-// scene 14 (非決策)
+// scene 14（非決策）
 let ii = [];
 ii[1] = "I don't believe I'll ever get out...";
 ii[2] = "Maybe it's safer to stay.";
@@ -175,7 +173,7 @@ ii[10] = "No—I must get out!";
 ii[11] = "I decide to escape.";
 ii[12] = "I make my move.";
 
-// scene 15 (非決策)
+// scene 15（非決策）
 let oo = [];
 oo[1] = "...";
 oo[2] = "What in the world?";
@@ -183,7 +181,7 @@ oo[3] = "What happened?";
 oo[4] = "This place doesn't look familiar...";
 oo[5] = "I look around.";
 
-// scene 16 (非決策)
+// scene 16（非決策）
 let cc = [];
 cc[1] = "...";
 cc[2] = "What's wrong with the world?";
@@ -195,7 +193,7 @@ cc[7] = "Can anyone help?";
 cc[8] = "......";
 cc[9] = "I try to survive.";
 
-// scene 17 (非決策)
+// scene 17（非決策）
 let jj = [];
 jj[1] = "I'll try...";
 jj[2] = "I finally escape! I must at least try.";
@@ -213,7 +211,7 @@ jj[13] = "I hear footsteps.";
 jj[14] = "What...?";
 jj[15] = "I open my eyes.";
 
-// scene 18 (非決策)
+// scene 18（非決策）
 let kk = [];
 kk[1] = "...Haha.";
 kk[2] = "They're here again.";
@@ -224,18 +222,18 @@ kk[6] = "Maybe this is the only way to survive.";
 kk[7] = "Is it better to be imprisoned than to starve?";
 kk[8] = "I resign myself.";
 
-// scene 19 (非決策)
+// scene 19（非決策）
 let vv = [];
 vv[1] = "...";
 vv[2] = "Here they are.";
 vv[3] = "I still don't know what they want.";
 vv[4] = "Their stare unsettles me.";
-vv[5] = "At first, I thought they’d test me.";
+vv[5] = "At first, I thought they'd test me.";
 vv[6] = "But they simply stare.";
 vv[7] = "...";
 vv[8] = "I sit in the corner.";
 
-// scene 20 (非決策)
+// scene 20（非決策）
 let hh = [];
 hh[1] = "I suppose I'll remain in this cage forever...";
 hh[2] = "At least it's safer than the outside world.";
@@ -249,7 +247,7 @@ hh[9] = "The memory hurts.";
 hh[10] = "I force myself to remember.";
 hh[11] = "I crouch down.";
 
-// scene 21 (非決策)
+// scene 21（非決策）
 let nn = [];
 nn[1] = ".";
 nn[2] = "..";
@@ -268,7 +266,7 @@ nn[14] = "Is that me?";
 nn[15] = "......";
 nn[16] = "I face the reality.";
 
-// scene 22 (非決策)
+// scene 22（非決策）
 let mm = [];
 mm[1] = "....";
 mm[2] = "So, I'm just a meerkat...?";
@@ -299,14 +297,14 @@ mm[26] = "So, please...";
 mm[27] = "Leave me alone.";
 
 //-------------------------------------
-// 索引控制（各場景用各自的控制變數，均以 1 為起始值） 
+// 索引控制（各場景各自使用的全域變數，均以 1 為起始值） 
 //-------------------------------------
 let i = 1, u = 1, y = 1, ee = 1, r = 1, t = 1, qq = 1, aa = 1, b = 1, c = 1;
 let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //─────────────────────────────────────
-// 轉場設定（決策場景：結果不同；非決策場景：兩鍵結果相同）
+// 轉場設定（若為決策場景，左右結果不同；非決策場景左右結果相同）
 //─────────────────────────────────────
 const transitions = {
   0: { z: 1, x: 2 },
@@ -316,7 +314,7 @@ const transitions = {
   4: { z: 5, x: 5 },
   5: { z: 6, x: 6 },
   6: { z: 7, x: 7 },
-  7: { z: 8, x: 9 },  // 決策場景（scene 0 與 scene 7為決策）
+  7: { z: 8, x: 9 },  // 決策場景
   8: { z: 10, x: 10 },
   9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
@@ -335,7 +333,7 @@ const transitions = {
 };
 
 //─────────────────────────────────────
-// 對話映射：指定每個 gameScene 使用哪個對話陣列及其索引變數名稱
+// 對話映射：指定每個 gameScene 使用哪個對話陣列及其對應的全域索引變數名稱
 //─────────────────────────────────────
 const dialogueMapping = {
   0: { arr: s, idxVar: 'i' },
@@ -364,7 +362,7 @@ const dialogueMapping = {
 };
 
 //-------------------------------------
-// 決策按鈕參數（兩個按鈕的區域），我們固定放在文字框區域內
+// 決策按鈕參數（決策時在文字框內顯示左右按鈕區域）
 //-------------------------------------
 const decisionLeftButton = { x: 20, y: 335, w: 300, h: 40 };
 const decisionRightButton = { x: 360, y: 335, w: 300, h: 40 };
@@ -386,7 +384,6 @@ function preload() {
   alienImg = loadImage("assets/alien.jpeg");
   meerkatreflectionImg = loadImage("assets/meerkat reflection.jpg");
   meerkatImg = loadImage("assets/meerkat.jpg");
-
   SuperLegendBoy = loadFont("assets/SuperLegendBoy.ttf");
 }
 
@@ -395,7 +392,6 @@ function preload() {
 //-------------------------------------
 function setup() {
   createCanvas(700, 394);
-  background(0);
   textFont(SuperLegendBoy);
   myTextbox = new Textbox();
 }
@@ -406,15 +402,15 @@ function setup() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
-    // 封面
+    // 封面：點擊空白區域開始遊戲
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
     text("Emohw2enr@uoyem*oclew", 95, 330);
     textSize(13);
-    text("- press space to continue -", 230, 365);
+    text("- click to continue -", 230, 365);
   } else if (sceneNumber === 1) {
-    // 根據 gameScene 選擇對話繪製（特殊場景不做修改）
+    // 根據 gameScene 選擇對話畫面（特殊場景維持原效果）
     switch(gameScene) {
       case 0: drawBaseScene(); break;
       case 1: drawDialogue(alienlabImg); break;
@@ -458,7 +454,7 @@ function getCurrentDialogue() {
 }
 
 //─────────────────────────────────────
-// 前進對話：僅在還未達到最後一筆時推進（採 1-index，最後一筆保留作決策提示時使用）
+// 前進對話（只在尚未達到最後一筆時推進）
 //─────────────────────────────────────
 function advanceDialogue() {
   let mapping = dialogueMapping[gameScene];
@@ -479,7 +475,7 @@ function resetDialogueIndexForScene(scene) {
 }
 
 //─────────────────────────────────────
-// 判斷目前場景是否為決策場景（依轉場設定，若左右結果不同則為決策場景）
+// 判斷目前場景是否為決策場景（若轉場左右結果不同則為決策場景）
 //─────────────────────────────────────
 function isDecisionScene(scene) {
   if (transitions[scene]) {
@@ -489,7 +485,7 @@ function isDecisionScene(scene) {
 }
 
 //─────────────────────────────────────
-// 繪製對話區
+// 繪製對話區：提示文字固定為 "- click to continue -"
 //─────────────────────────────────────
 function drawDialogue(bgImg) {
   if (bgImg) {
@@ -499,17 +495,14 @@ function drawDialogue(bgImg) {
   fill(255);
   textSize(14);
   
-  // 預設提示文字：always "- click to continue -"
   let prompt = "- click to continue -";
-  
-  // 若為決策場景且已進到最後一筆，則改提示並顯示決策按鈕
   let mapping = dialogueMapping[gameScene];
   let idx = window[mapping.idxVar];
+  // 若為決策場景且已推進到最後一筆，則提示「- click a choice -」並畫出決策按鈕
   if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
     prompt = "- click a choice -";
     drawDecisionButtons();
   }
-  
   text(prompt, 248, 40);
   
   let textContent = getCurrentDialogue();
@@ -522,10 +515,9 @@ function drawBaseScene() {
 }
 
 //─────────────────────────────────────
-// 決策按鈕繪製：依照目前 gameScene 畫出左右兩個按鈕
+// 決策按鈕繪製（會在文字框內顯示左右兩個按鈕）
 //─────────────────────────────────────
 function drawDecisionButtons() {
-  // 依據目前場景決定按鈕標題（此例只用在 scene 0 與 scene 7）
   let leftText = "", rightText = "";
   if (gameScene === 0) {
     leftText = "Talk to aliens";
@@ -537,8 +529,7 @@ function drawDecisionButtons() {
     leftText = "Option 1";
     rightText = "Option 2";
   }
-  
-  // 畫出左側按鈕
+  // 左側按鈕（綠色）
   fill(50, 150, 50);
   rect(decisionLeftButton.x, decisionLeftButton.y, decisionLeftButton.w, decisionLeftButton.h, 5);
   fill(255);
@@ -546,13 +537,13 @@ function drawDecisionButtons() {
   textAlign(CENTER, CENTER);
   text(leftText, decisionLeftButton.x + decisionLeftButton.w/2, decisionLeftButton.y + decisionLeftButton.h/2);
   
-  // 畫出右側按鈕
+  // 右側按鈕（藍色）
   fill(50, 50, 150);
   rect(decisionRightButton.x, decisionRightButton.y, decisionRightButton.w, decisionRightButton.h, 5);
   fill(255);
   text(rightText, decisionRightButton.x + decisionRightButton.w/2, decisionRightButton.y + decisionRightButton.h/2);
   
-  textAlign(LEFT, BASELINE); // 恢復預設
+  textAlign(LEFT, BASELINE);
 }
 
 //─────────────────────────────────────
@@ -616,10 +607,10 @@ function drawNNScene() {
 }
 
 //─────────────────────────────────────
-// 輸入處理：僅以滑鼠點擊推進
+// 輸入處理：全程只用滑鼠點擊推進
 //─────────────────────────────────────
 function mousePressed() {
-  // 封面點空白區域同樣以滑鼠點擊開始遊戲（也可用空白鍵啟動）
+  // 封面點擊：開始遊戲
   if (sceneNumber === 0) {
     sceneNumber = 1;
     gameScene = 0;
@@ -630,9 +621,8 @@ function mousePressed() {
     let mapping = dialogueMapping[gameScene];
     let idx = window[mapping.idxVar];
     
-    // 若為決策場景且已推進到最後一筆，則檢查是否點擊到按鈕區
+    // 若為決策場景且已進到最後一筆，檢查是否點擊在決策按鈕上
     if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
-      // 檢查是否點擊在左按鈕
       if (mouseX >= decisionLeftButton.x && mouseX <= decisionLeftButton.x + decisionLeftButton.w &&
           mouseY >= decisionLeftButton.y && mouseY <= decisionLeftButton.y + decisionLeftButton.h) {
         let nextScene = transitions[gameScene].z;
@@ -640,7 +630,6 @@ function mousePressed() {
         resetDialogueIndexForScene(gameScene);
         return;
       }
-      // 檢查是否點擊在右按鈕
       if (mouseX >= decisionRightButton.x && mouseX <= decisionRightButton.x + decisionRightButton.w &&
           mouseY >= decisionRightButton.y && mouseY <= decisionRightButton.y + decisionRightButton.h) {
         let nextScene = transitions[gameScene].x;
@@ -648,15 +637,15 @@ function mousePressed() {
         resetDialogueIndexForScene(gameScene);
         return;
       }
-      // 若在決策場景最後一筆但點擊在按鈕外，則不做任何事
+      // 點擊在按鈕外則不動作
       return;
     }
     
-    // 非決策場景或還未到最後一筆：若還有對話，則推進；否則自動轉場
+    // 若還有對話尚未推進，則進一步推進
     if (idx < mapping.arr.length - 1) {
       advanceDialogue();
     } else {
-      // 非決策場景對話推完後，自動根據轉場設定（左右結果相同）進入下一場景
+      // 非決策場景，對話結束後自動依轉場設定進入下一場景
       let nextScene = transitions[gameScene] ? transitions[gameScene].z : gameScene;
       gameScene = nextScene;
       resetDialogueIndexForScene(gameScene);
