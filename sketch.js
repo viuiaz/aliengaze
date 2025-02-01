@@ -16,8 +16,8 @@ let ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 let SuperLegendBoy; 
 
-// 對話陣列（各場景對話內容，採 1 為起始索引）
-//【注意】我們已移除原有按鍵提示，改以敘述文字呈現
+//【對話內容】（採用 1 為起始索引）
+//※ 此處已移除任何「press …」提示文字，對話最後一筆若為決策，請自行描述選項內容
 
 // scene 0 (決策場景)
 let s = [];
@@ -71,7 +71,7 @@ j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
 j[2] = "...What are they even saying? I wish they spoke English.";
 j[3] = "I listen carefully.";
 
-// scene 7 (決策)
+// scene 7 (決策場景)
 let k = [];
 k[1] = "When I got closer, they stopped talking.";
 k[2] = "...";
@@ -86,7 +86,7 @@ l[1] = "'Ahhhhhhh!'";
 l[2] = "'Stop staring! Let me out!'";
 l[3] = "I plead, 'What did I do? I'm just ordinary.'";
 l[4] = "I beg, 'Please let me out...'";
-l[5] = "One of them frowned, but nothing happens.";
+l[5] = "One of them frowned, but nothing happened.";
 l[6] = "I feel tired after all the yelling.";
 l[7] = "I settle down in the corner.";
 
@@ -298,14 +298,16 @@ mm[26] = "So, please...";
 mm[27] = "Leave me alone.";
 
 //-------------------------------------
-// 索引控制（各場景使用各自的控制變數，均以 1 為起始值） 
+// 索引控制（各場景用各自的控制變數，均以 1 為起始值） 
 //-------------------------------------
 let i = 1, u = 1, y = 1, ee = 1, r = 1, t = 1, qq = 1, aa = 1, b = 1, c = 1;
 let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //─────────────────────────────────────
-// 轉場設定：使用 z 與 x 作選項（若 z 與 x 結果不同則為決策場景）
+// 轉場設定（依照決策情形決定下一場景）
+// 決策場景（轉場結果不同）：scene 0 與 scene 7
+// 非決策場景：z 與 x 結果相同
 //─────────────────────────────────────
 const transitions = {
   0: { z: 1, x: 2 },
@@ -315,7 +317,7 @@ const transitions = {
   4: { z: 5, x: 5 },
   5: { z: 6, x: 6 },
   6: { z: 7, x: 7 },
-  7: { z: 8, x: 9 },  // gameScene 7 為決策場景
+  7: { z: 8, x: 9 },  // 決策場景
   8: { z: 10, x: 10 },
   9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
@@ -330,11 +332,11 @@ const transitions = {
   19: { z: 20, x: 20 },
   20: { z: 21, x: 21 },
   21: { z: 22, x: 22 }
-  // gameScene 22 為結尾
+  // scene 22 為結尾
 };
 
 //─────────────────────────────────────
-// 對話映射：指定每個 gameScene 使用哪個對話陣列與其索引變數名稱
+// 對話映射：指定每個 gameScene 使用哪個對話陣列及其索引變數名稱
 //─────────────────────────────────────
 const dialogueMapping = {
   0: { arr: s, idxVar: 'i' },
@@ -451,11 +453,11 @@ function getCurrentDialogue() {
   return mapping.arr[idx] || "";
 }
 
-// 前進目前場景的對話（只允許進行到「最後一筆前」）
+// 前進目前場景的對話（僅在尚未達到最後一筆時有效）
 function advanceDialogue() {
   let mapping = dialogueMapping[gameScene];
   let idxVar = mapping.idxVar;
-  // 若目前索引小於 (陣列長度 - 1) 則可進一步推進
+  // 使用 1-index，若目前索引小於 (陣列長度 - 1) 則可推進
   if (window[idxVar] < mapping.arr.length - 1) {
     window[idxVar]++;
   }
@@ -469,7 +471,7 @@ function resetDialogueIndexForScene(scene) {
   }
 }
 
-// 判斷目前場景是否為決策場景（z 與 x 的結果不同）
+// 判斷目前場景是否為決策場景（轉場結果不同）
 function isDecisionScene(scene) {
   if (transitions[scene]) {
     return transitions[scene].z !== transitions[scene].x;
@@ -478,7 +480,7 @@ function isDecisionScene(scene) {
 }
 
 //─────────────────────────────────────
-// 繪製對話區（依據場景決定提示文字）
+// 繪製對話區：提示文字固定為 "- click to continue -"
 //─────────────────────────────────────
 function drawDialogue(bgImg) {
   if (bgImg) {
@@ -488,19 +490,8 @@ function drawDialogue(bgImg) {
   fill(255);
   textSize(14);
   
-  let mapping = dialogueMapping[gameScene];
-  let idx = window[mapping.idxVar];
-  let prompt = "";
-  if (isDecisionScene(gameScene)) {
-    // 若尚未進到最後一筆，提示滑鼠點擊；最後一筆則提示按 z 或 x
-    if (idx < mapping.arr.length - 1) {
-      prompt = "- click to continue -";
-    } else {
-      prompt = "- press z or x to choose -";
-    }
-  } else {
-    prompt = "- click to continue -";
-  }
+  // 固定提示文字（不再顯示任何 "press z or x"）
+  let prompt = "- click to continue -";
   text(prompt, 248, 40);
   
   let textContent = getCurrentDialogue();
@@ -577,8 +568,8 @@ function drawNNScene() {
 //─────────────────────────────────────
 
 // 滑鼠點擊：
-// • 非決策場景：若尚未顯示到最後一筆則推進；若已到最後一筆則自動轉場
-// • 決策場景：僅在未到最後一筆時推進，最後一筆時等待按鍵輸入
+// • 若非決策場景：當尚未達最後一筆時推進；若已達最後一筆則自動轉場
+// • 若決策場景：僅在未達最後一筆時推進；若已達最後一筆則不處理（等待按鍵選擇）
 function mousePressed() {
   if (sceneNumber === 1) {
     let mapping = dialogueMapping[gameScene];
@@ -587,12 +578,12 @@ function mousePressed() {
       if (idx < mapping.arr.length - 1) {
         advanceDialogue();
       }
-      // 若已到最後一筆，則等待 keyPressed 處理
+      // 已達最後一筆時，不接受滑鼠點擊
     } else {
       if (idx < mapping.arr.length - 1) {
         advanceDialogue();
       } else {
-        // 非決策場景，對話全部讀完後自動轉場（z 與 x 結果相同）
+        // 非決策場景，對話結束後自動轉場（z 與 x 結果皆相同）
         let nextScene = transitions[gameScene] ? transitions[gameScene].z : gameScene;
         gameScene = nextScene;
         resetDialogueIndexForScene(gameScene);
@@ -601,8 +592,9 @@ function mousePressed() {
   }
 }
 
-// 鍵盤輸入：僅在決策場景且對話已進至最後一筆時才處理
+// 鍵盤輸入：僅在決策場景且對話已達最後一筆時才處理（接受 z 或 x）
 function keyPressed() {
+  // 封面：按空白鍵開始
   if (sceneNumber === 0 && key === ' ') {
     sceneNumber = 1;
     gameScene = 0;
@@ -611,6 +603,7 @@ function keyPressed() {
   if (sceneNumber === 1 && (key === 'z' || key === 'x')) {
     let mapping = dialogueMapping[gameScene];
     let idx = window[mapping.idxVar];
+    // 僅在決策場景且已達最後一筆（即對話提示文字為最末）時處理
     if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
       let nextScene = transitions[gameScene][key];
       gameScene = nextScene;
