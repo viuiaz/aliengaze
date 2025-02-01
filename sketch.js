@@ -2,7 +2,7 @@
 // 0. 全域變數
 //-------------------------------------
 var sceneNumber = 0;   // 0 = 封面, 1 = 正式遊戲
-var gameScene = 0;     // 控制正式遊戲中的場景
+var gameScene = 0;     // 正式遊戲中的場景編號
 
 // 透明度控制（部分特殊場景使用）
 var transparency2 = 255, transparency3 = 0;
@@ -16,23 +16,23 @@ var ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 var SuperLegendBoy; 
 
-// 對話陣列（完全保留你原始的內容，只將提示鍵換成 z 與 x）
+// 對話陣列（完全保留原始內容）
 var s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 各場景對話索引控制（各自從 1 開始），必須用 var 以便 window 物件能存取
+// 各場景對話索引控制（從 1 開始），必須用 var 以便 window[...] 正確存取
 var i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //-------------------------------------
-// 決策場景的分支對照表（真正有兩條不同分支的場景）
+// 決策場景的分支對照表（只有真正有兩條不同分支的場景才使用鍵盤決策）
 // 例如：
-//   在 scene 0 (s[11])：按 z 進入 gameScene 1，按 x 進入 gameScene 2
-//   在 scene 7 (k[6])：按 z 進入 gameScene 8，按 x 進入 gameScene 9
-//   在 scene 12 (bb[22])：按 z 進入 gameScene 13，按 x 進入 gameScene 14
+//   scene 0 的 s[11]：按 z → gameScene 1；按 x → gameScene 2
+//   scene 7 的 k[6]：按 z → gameScene 8；按 x → gameScene 9
+//   scene 12 的 bb[22]：按 z → gameScene 13；按 x → gameScene 14
 //-------------------------------------
 var decisionMap = {
   0: { z: 1, x: 2 },
@@ -63,7 +63,7 @@ var transitions = {
   19: { z: 20, x: 20 },
   20: { z: 21, x: 21 },
   21: { z: 22, x: 22 }
-  // 若某場景無特殊分支，則玩家只用滑鼠推進對話後自動轉換（以 z 對應下一場景）
+  // 若場景無特殊分支，則僅用滑鼠點擊推進對話後自動轉換（採用 z 值）
 };
 
 //-------------------------------------
@@ -95,7 +95,7 @@ function setup() {
   textFont(SuperLegendBoy);
   background(0);
 
-  // 初始化所有對話內容（完全保留原始內容，只將提示鍵換為 z 與 x）
+  // 初始化對話內容（完全保留原始文本，只將提示鍵替換為 z 與 x）
   s[1] = "..."; 
   s[2] = "... What?"; 
   s[3] = "What is happening?";
@@ -220,7 +220,7 @@ function setup() {
   oo[2] = "...What in the world?";
   oo[3] = "What happened?";
   oo[4] = "It doesn't look like the place I've been before...";
-  oo[5] = "press [z] to look around";
+  oo[5] = "press [x] to look around";
 
   cc[1] = "...";
   cc[2] = "What is wrong with the world?";
@@ -230,7 +230,7 @@ function setup() {
   cc[6] = "...";
   cc[7] = "Can anyone help...";
   cc[8] = "......";
-  cc[9] = "press [z] to try and survive";
+  cc[9] = "press [v] to try and survive";
 
   jj[1] = "I'll try...";
   jj[2] = "I finally got out! I have to at least try.";
@@ -246,7 +246,7 @@ function setup() {
   jj[12] = "...";
   jj[13] = "*footstep sounds*";
   jj[14] = "What...?";
-  jj[15] = "press [z] to open my eyes";
+  jj[15] = "press [e] to open my eyes";
 
   kk[1] = "...Haha.";
   kk[2] = "It's them again.";
@@ -371,36 +371,31 @@ function keyPressed() {
     }
     return;
   }
-  // 遊戲狀態：如果當前對話包含 "press" 並且該場景屬於決策場景，則只接受 z 或 x 鍵
   if (sceneNumber === 1) {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
     if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
-      if (key === 'z' || key === 'x') {
-        gameScene = decisionMap[gameScene][key];
+      if (key === 'z' || key === 'x' || key === 'Z' || key === 'X' || key === 'I' || key === 'Y') {
+        gameScene = decisionMap[gameScene][key.toLowerCase()];
         resetSceneIndexes(gameScene);
       }
     }
   }
 }
 
-// 鼠標點擊：僅用於推進當前場景對話（遇決策提示則不接受點擊）
 function mousePressed() {
   if (sceneNumber === 0) return; // 封面忽略鼠標點擊
   if (sceneNumber === 1) {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前對話含有 "press" 並且該場景屬於決策場景，則不接受鼠標點擊
     if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
       return;
     }
-    // 否則推進當前場景對話
     if (idx < mapping.arr.length) {
       advanceCurrentIndex();
     } else {
-      // 對話讀完後，若有轉場設定則自動切換（非決策場景左右結果相同）
       if (transitions[gameScene]) {
         gameScene = transitions[gameScene].z;
         resetSceneIndexes(gameScene);
@@ -409,7 +404,6 @@ function mousePressed() {
   }
 }
 
-// 僅推進當前場景對話索引（只改變該場景的專用索引）
 function advanceCurrentIndex() {
   var mapping = dialogueMapping[gameScene];
   var idxVar = mapping.idxVar;
@@ -446,10 +440,10 @@ var dialogueMapping = {
 };
 
 //-------------------------------------
-// 通用場景繪製函式（用於非特殊場景）
+// 通用場景繪製函式
 //-------------------------------------
 function drawScene(textContent, bgImg) {
-  if(bgImg) image(bgImg, 0, 0);
+  if (bgImg) image(bgImg, 0, 0);
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -461,7 +455,7 @@ function drawScene(textContent, bgImg) {
 // 用於依對話映射繪製的場景
 //-------------------------------------
 function drawDialogue(bgImg) {
-  if(bgImg) image(bgImg, 0, 0);
+  if (bgImg) image(bgImg, 0, 0);
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -483,7 +477,6 @@ function drawDialogue(bgImg) {
 //-------------------------------------
 function drawTranquilizerScene() {
   push();
-  // 在 e 陣列中，只有當進度大於 8 時才開始降低透明度（模擬注射後畫面變黑）
   if (ff > 8 && transparency2 > 0) {
     transparency2 -= 0.9;
   }
@@ -545,7 +538,6 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //-------------------------------------
 function drawBaseScene() {
-  // 使用 alienlabImg 作背景呈現初始對話（s 陣列）
   drawDialogue(alienlabImg);
 }
 
@@ -555,7 +547,6 @@ function drawBaseScene() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
-    // 封面：只接受空白鍵
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
@@ -563,7 +554,6 @@ function draw() {
     textSize(13);
     text("- press space to continue -", 230, 365);
   } else if (sceneNumber === 1) {
-    // 遊戲主場景：依 gameScene 切換
     switch(gameScene) {
       case 0: drawBaseScene(); break;
       case 1: drawScene(a[u], alienlabImg); break;
