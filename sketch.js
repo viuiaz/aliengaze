@@ -17,16 +17,26 @@ let ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 let SuperLegendBoy; 
 
-// 對話陣列 (完整保留原始內容，只將提示鍵替換為 z 與 x)
+// 對話陣列 (完整保留原始內容)
 let s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 索引控制（從 1 開始）
+// 各場景的對話索引控制（從 1 開始）
 let i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
+
+//-------------------------------------
+// 決策場景的分支對照表（只處理真正有兩條不同分支的場景）
+// 例如 scene 0 的選項原本是 T 與 O，我們改為 z 與 x
+//-------------------------------------
+const decisionMap = {
+  0: { z: 1, x: 2 },
+  7: { z: 8, x: 9 },
+  12: { z: 13, x: 14 }
+};
 
 //-------------------------------------
 // 1. preload()
@@ -54,10 +64,10 @@ function preload() {
 //-------------------------------------
 function setup() {
   createCanvas(700, 394);
-  background(0);
   textFont(SuperLegendBoy);
+  background(0);
 
-  // 初始化所有對話內容（依原始內容，僅將提示鍵替換為 z 與 x）
+  // 初始化所有對話內容（完全保留原始內容）
   s[1] = "..."; 
   s[2] = "... What?"; 
   s[3] = "What is happening?";
@@ -163,7 +173,7 @@ function setup() {
   ss[6] = "I don't even know what to feel after these uncountable days...";
   ss[7] = "...";
   ss[8] = "I ran out immediately without a second thought.";
-  ss[9] = "press [z] to get out";
+  ss[9] = "press [K] to get out";
 
   ii[1] = "I don't believe I'll have the chance to get out...";
   ii[2] = "Maybe staying here is the best option.";
@@ -259,7 +269,7 @@ function setup() {
 
   mm[1] = "....";
   mm[2] = "So, I am just a meerkat...?";
-  mm[3] = "That's why the last memory I have is in a dessert...";
+  mm[3] = "That's why my last memory is in a dessert...";
   mm[4] = "... Haha.";
   mm[5] = "How funny is this.";
   mm[6] = "Even if it was just a dream...";
@@ -322,8 +332,9 @@ class Textbox {
 }
 
 //-------------------------------------
-// 輸入處理：封面僅接受空白鍵啟動，遊戲內則保留原本按鍵選項（但所有選項提示均替換為 z 與 x）
+// 輸入處理
 //-------------------------------------
+// 封面狀態：僅接受空白鍵啟動
 function keyPressed() {
   if (sceneNumber === 0) {
     if (key === ' ') {
@@ -332,61 +343,44 @@ function keyPressed() {
     }
     return;
   }
+  // 遊戲狀態：若當前對話文字含有分支提示（即包含 "press"）且此場景屬於決策場景（decisionMap 中有設定）
   if (sceneNumber === 1) {
-    // 只有當玩家按下鍵盤時才做選擇，保留原本 keyMap（但實際上你看對話提示已換成 z 與 x）
-    const keyMap = {
-      'z': 1, // 對應原本的 T 或 S 或 R、… (左側選項)
-      'x': 2  // 對應原本的 O 或 P、… (右側選項)
-    };
-    // 為了保留你原本的 branching 設定，我們採用以下邏輯：
-    // 當目前對話顯示的那一行含有選項提示（即對話文本內含 "press"）時，
-    // 如果玩家按下 z 或 x，就直接切換到對應場景，否則不處理。
     let mapping = dialogueMapping[gameScene];
     let currentText = mapping.arr[ window[mapping.idxVar] ];
-    if (currentText.indexOf("press") !== -1) {
-      if (key in keyMap) {
-        // 根據原本的分支規則，這裡根據 gameScene 決定下一個場景
-        // 以下分支依據你原本 keyMap 中的設定：
-        // 例如：在 scene 0 (s[11])，左選項（z）對應原來 T，右選項（x）對應原來 O
-        // 我們預先設定一個簡單的轉換對照表：
-        const decisionMap = {
-          0: { z: 1, x: 2 },
-          7: { z: 8, x: 9 },
-          4: { z: 5, x: 5 }, // 若只有單一路徑，兩者皆同
-          11: { z: 12, x: 12 },
-          12: { z: 13, x: 13 },
-          14: { z: 15, x: 15 }
-          // 若有其他決策場景，可依原本邏輯補充
-        };
-        if(decisionMap[gameScene]) {
-          gameScene = decisionMap[gameScene][key];
-          resetSceneIndexes(gameScene);
-        }
+    if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
+      if (key === 'z' || key === 'x') {
+        gameScene = decisionMap[gameScene][key];
+        resetSceneIndexes(gameScene);
+      }
+    }
+    // 否則（非決策分支）保留原有邏輯（例如透過滑鼠點擊推進對話）
+  }
+}
+
+// 鼠標點擊：僅用於推進當前場景對話（若遇決策提示，等待鍵盤 z/x）
+function mousePressed() {
+  if (sceneNumber === 0) return; // 封面忽略鼠標點擊
+  if (sceneNumber === 1) {
+    let mapping = dialogueMapping[gameScene];
+    let idx = window[mapping.idxVar];
+    // 如果當前對話文字含有 "press" 並且該場景是決策場景，則不接受鼠標點擊
+    if (decisionMap[gameScene] && mapping.arr[idx] && mapping.arr[idx].indexOf("press") !== -1) {
+      return;
+    }
+    // 否則推進當前場景的對話
+    if (idx < mapping.arr.length) {
+      advanceCurrentIndex();
+    } else {
+      // 若對話全部讀完，則自動依原本轉場設定進入下一場景（這裡用轉場設定中的 z 值，因為非決策情況左右相同）
+      if (transitions[gameScene]) {
+        gameScene = transitions[gameScene].z;
+        resetSceneIndexes(gameScene);
       }
     }
   }
 }
 
-function mousePressed() {
-  // 封面忽略鼠標點擊
-  if (sceneNumber === 0) return;
-  if (sceneNumber === 1) {
-    let mapping = dialogueMapping[gameScene];
-    let idx = window[mapping.idxVar];
-    // 只推進當前場景的對話（不影響其他場景的索引）
-    if (idx < mapping.arr.length) {
-      advanceCurrentIndex();
-    } else {
-      // 對話全部讀完後，自動依原本轉場設定進入下一場景（此處非決策場景左右結果相同）
-      // 若沒有特殊分支，則保持不變
-      let nextScene = gameScene;
-      // 例如若在 scene 3（非決策）則自動進入下一個預設場景（依你原本 keyMap順序可自行設定）
-      // 這裡不做自動轉換，讓玩家必須按鍵決定（也可自行調整）
-    }
-  }
-}
-
-// 僅推進目前場景的對話索引（只改變該場景所用的索引）
+// 僅推進當前場景對話索引（只改變該場景的索引變數）
 function advanceCurrentIndex() {
   let mapping = dialogueMapping[gameScene];
   let idxVar = mapping.idxVar;
@@ -394,10 +388,68 @@ function advanceCurrentIndex() {
 }
 
 //-------------------------------------
-// 通用場景繪製函式
+// 對話映射：指定每個 gameScene 使用哪個對話陣列及其索引變數名稱
+//-------------------------------------
+const dialogueMapping = {
+  0: { arr: s, idxVar: 'i' },
+  1: { arr: a, idxVar: 'u' },
+  2: { arr: d, idxVar: 'y' },
+  3: { arr: g, idxVar: 'ee' },
+  4: { arr: f, idxVar: 'r' },
+  5: { arr: h, idxVar: 't' },
+  6: { arr: j, idxVar: 'qq' },
+  7: { arr: k, idxVar: 'aa' },
+  8: { arr: l, idxVar: 'b' },
+  9: { arr: q, idxVar: 'c' },
+  10: { arr: w, idxVar: 'dd' },
+  11: { arr: e, idxVar: 'ff' },
+  12: { arr: bb, idxVar: 'gg' },
+  13: { arr: ss, idxVar: 'sss' },
+  14: { arr: ii, idxVar: 'iii' },
+  15: { arr: oo, idxVar: 'ooo' },
+  16: { arr: cc, idxVar: 'ccc' },
+  17: { arr: jj, idxVar: 'jjj' },
+  18: { arr: kk, idxVar: 'kkk' },
+  19: { arr: vv, idxVar: 'vvv' },
+  20: { arr: hh, idxVar: 'hhh' },
+  21: { arr: nn, idxVar: 'nnn' },
+  22: { arr: mm, idxVar: 'mmm' }
+};
+
+//-------------------------------------
+// 轉場設定：依原始邏輯（若為決策場景，分支不同；非決策場景左右相同）
+//-------------------------------------
+const transitions = {
+  0: { z: 1, x: 2 },
+  1: { z: 3, x: 3 },
+  2: { z: 3, x: 3 },
+  3: { z: 4, x: 4 },
+  4: { z: 5, x: 5 },
+  5: { z: 6, x: 6 },
+  6: { z: 7, x: 7 },
+  7: { z: 8, x: 9 },
+  8: { z: 10, x: 10 },
+  9: { z: 10, x: 10 },
+  10: { z: 11, x: 11 },
+  11: { z: 12, x: 12 },
+  12: { z: 13, x: 14 },
+  13: { z: 14, x: 14 },
+  14: { z: 15, x: 15 },
+  15: { z: 16, x: 16 },
+  16: { z: 17, x: 17 },
+  17: { z: 18, x: 18 },
+  18: { z: 19, x: 19 },
+  19: { z: 20, x: 20 },
+  20: { z: 21, x: 21 },
+  21: { z: 22, x: 22 }
+  // scene 22 為結尾
+};
+
+//-------------------------------------
+// 繪製文字框與對話的通用函式
 //-------------------------------------
 function drawScene(textContent, bgImg) {
-  if (bgImg) image(bgImg, 0, 0);
+  if(bgImg) image(bgImg, 0, 0);
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -406,11 +458,11 @@ function drawScene(textContent, bgImg) {
 }
 
 //-------------------------------------
-// 特殊場景繪製函式 (帶透明度效果)
+// 各特殊場景繪製函式（帶透明度效果）
 //-------------------------------------
 function drawTranquilizerScene() {
   push();
-  // 延遲開始變暗，直到對話進度到達 injection 之後（e[8]已顯示）
+  // 只有當 e 的對話進度大於 8 時才開始逐漸變黑
   if (ff > 8 && transparency2 > 0) transparency2 -= 0.9;
   tint(255, transparency2);
   image(alientranquilizerImg, 0, 0);
@@ -470,16 +522,15 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //-------------------------------------
 function drawBaseScene() {
-  // 以 alienlabImg 背景呈現初始對話
+  // 使用 alienlabImg 為背景呈現初始對話
   drawScene(alienlabImg);
 }
 
 //-------------------------------------
-// 3. draw()
+// 3. draw() —— 主循環（只定義一次）
 //-------------------------------------
 function draw() {
   background(0);
-
   switch(sceneNumber) {
     case 0: // 封面
       image(startImg, 0, 0);
@@ -489,7 +540,6 @@ function draw() {
       textSize(13);
       text("- press space to continue -", 230, 365);
       break;
-
     case 1: // 遊戲主場景
       switch(gameScene) {
         case 0: drawBaseScene(); break;
