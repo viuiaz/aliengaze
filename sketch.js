@@ -16,19 +16,296 @@ let ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 let SuperLegendBoy; 
 
-// 對話陣列（各場景對話內容）
-let s=[], a=[], d=[], f=[], g=[], h=[],
-    j=[], k=[], l=[], q=[], w=[], e=[],
-    bb=[], ss=[], ii=[], oo=[], cc=[],
-    jj=[], kk=[], vv=[], hh=[], nn=[], mm=[];
+// 對話陣列（各場景對話內容，採 1 為起始索引）
+//【注意】我們已移除原有按鍵提示，改以敘述文字呈現
 
-// 索引控制（從 1 開始）
-let i=1, u=1, y=1, ee=1, r=1, t=1, qq=1, aa=1, b=1, c=1;
-let dd=1, ff=1, gg=1, sss=1, iii=1, ooo=1, ccc=1, jjj=1;
-let kkk=1, vvv=1, hhh=1, nnn=1, mmm=1;
+// scene 0 (決策場景)
+let s = [];
+s[1] = "..."; 
+s[2] = "... What?"; 
+s[3] = "What is happening?";
+s[4] = "Where am I? What are they?";
+s[5] = "Are those... aliens?";
+s[6] = "..."; 
+s[7] = "... Am I dreaming?";
+s[8] = "What are they doing? Are they looking at me?";
+s[9] = "Wait. Why am I behind the bars? Am I in a cage?";
+s[10] = "... What should I do?";
+s[11] = "Do you try to talk to the aliens or observe silently?";
+
+// scene 1 (非決策)
+let a = [];
+a[1] = "'Hey! What do you want?'"; 
+a[2] = "...";
+a[3] = "They just keep staring at me without saying anything.";
+a[4] = "I decide to sit in the corner and observe.";
+
+// scene 2 (非決策)
+let d = [];
+d[1] = "I'll just wait and see what's going to happen.";
+d[2] = "I choose to sit in the corner and observe.";
+
+// scene 3 (非決策)
+let g = [];
+g[1] = "After hours of waiting, I fell asleep.";
+g[2] = "I wake up.";
+
+// scene 4 (非決策)
+let f = [];
+f[1] = "!";
+f[2] = "Oh! No one's here now.";
+f[3] = "What should I do?";
+f[4] = "I must decide whether to crash the bars or squeeze through.";
+
+// scene 5 (非決策)
+let h = [];
+h[1] = "Ahhh... It hurts... Maybe I should stop.";
+h[2] = "*footstep sounds*";
+h[3] = "...";
+h[4] = "They are back! I don't know what they will do to me...";
+h[5] = "I cower in the corner.";
+
+// scene 6 (非決策)
+let j = [];
+j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
+j[2] = "...What are they even saying? I wish they spoke English.";
+j[3] = "I listen carefully.";
+
+// scene 7 (決策)
+let k = [];
+k[1] = "When I got closer, they stopped talking.";
+k[2] = "...";
+k[3] = "And how many aliens are there?";
+k[4] = "What did I do to deserve this?";
+k[5] = "What should I do?";
+k[6] = "Do I scream or pace around?";
+
+// scene 8 (非決策)
+let l = [];
+l[1] = "'Ahhhhhhh!'";
+l[2] = "'Stop staring! Let me out!'";
+l[3] = "I plead, 'What did I do? I'm just ordinary.'";
+l[4] = "I beg, 'Please let me out...'";
+l[5] = "One of them frowned, but nothing happens.";
+l[6] = "I feel tired after all the yelling.";
+l[7] = "I settle down in the corner.";
+
+// scene 9 (非決策)
+let q = [];
+q[1] = "I start walking around...";
+q[2] = "I feel a slight easing of my anxiety.";
+q[3] = "...";
+q[4] = "One of them frowned, yet nothing happened.";
+q[5] = "I begin to feel tired.";
+q[6] = "I decide to rest in the corner.";
+
+// scene 10 (非決策)
+let w = [];
+w[1] = "Now it's just me... and them.";
+w[2] = "Again.";
+w[3] = "Should I do something to attract their attention?";
+w[4] = "I've had enough of waiting.";
+w[5] = "What should I do?";
+w[6] = "I choose between hitting the wall with my head or wildly plucking my hair.";
+
+// scene 11 (非決策)
+let e = [];
+e[1] = "Somehow, hurting myself feels oddly relieving...";
+e[2] = "Wait! Something is coming toward me!";
+e[3] = "What will it do?";
+e[4] = "Is that a syringe?";
+e[5] = "I plead, 'Stop! Please don't hurt me!'";
+e[6] = "I keep yelling, yet it gets closer...";
+e[7] = "...!";
+e[8] = "It grabs my arm and injects something...";
+e[9] = "I feel drowsy again.";
+e[10] = "...";
+e[11] = "I wake up.";
+
+// scene 12 (非決策)
+let bb = [];
+bb[1] = "I don't know how long I slept...";
+bb[2] = "But no one seems to be around.";
+bb[3] = "I still have no idea why I'm here.";
+bb[4] = "Did I do something wrong?";
+bb[5] = "What happened to my family?";
+bb[6] = "Are they also imprisoned somewhere?";
+bb[7] = "I can't understand.";
+bb[8] = "...";
+bb[9] = "I call out, 'Hello?'";
+bb[10] = "...";
+bb[11] = "No one's there. Perhaps this is my chance to escape.";
+bb[12] = "I move closer to the bars and look around.";
+bb[13] = "...";
+bb[14] = "I notice something on the floor...";
+bb[15] = "It was hidden by the bars before.";
+bb[16] = "Now I can see it clearly.";
+bb[17] = "Is that a key? Why is it here?";
+bb[18] = "Did an alien drop the key?";
+bb[19] = "That spot is exactly where it was.";
+bb[20] = "It almost seems as if an alien sympathizes with me.";
+bb[21] = "What should I do?";
+bb[22] = "Do I use the key or stay put?";
+
+// scene 13 (非決策)
+let ss = [];
+ss[1] = "This is my only chance.";
+ss[2] = "I squat down and grab the key.";
+ss[3] = "It takes a while to unlock the door from inside.";
+ss[4] = "...";
+ss[5] = "The door finally unlocks.";
+ss[6] = "After endless days, I feel numb.";
+ss[7] = "...";
+ss[8] = "I run out without hesitation.";
+ss[9] = "I escape.";
+
+// scene 14 (非決策)
+let ii = [];
+ii[1] = "I don't believe I'll ever get out...";
+ii[2] = "Maybe it's safer to stay.";
+ii[3] = "At least I have food...";
+ii[4] = "Even though I can't see my family...";
+ii[5] = "It seems better to stay here.";
+ii[6] = "Right?";
+ii[7] = "...";
+ii[8] = "I question my decision.";
+ii[9] = "Do I truly trust my choice?";
+ii[10] = "No—I must get out!";
+ii[11] = "I decide to escape.";
+ii[12] = "I make my move.";
+
+// scene 15 (非決策)
+let oo = [];
+oo[1] = "...";
+oo[2] = "What in the world?";
+oo[3] = "What happened?";
+oo[4] = "This place doesn't look familiar...";
+oo[5] = "I look around.";
+
+// scene 16 (非決策)
+let cc = [];
+cc[1] = "...";
+cc[2] = "What's wrong with the world?";
+cc[3] = "Everything looks like ruins.";
+cc[4] = "How can I survive alone?";
+cc[5] = "Did I make the wrong choice?";
+cc[6] = "...";
+cc[7] = "Can anyone help?";
+cc[8] = "......";
+cc[9] = "I try to survive.";
+
+// scene 17 (非決策)
+let jj = [];
+jj[1] = "I'll try...";
+jj[2] = "I finally escape! I must at least try.";
+jj[3] = "But why is there nothing?";
+jj[4] = "No humans, no animals, no signs of life.";
+jj[5] = "...";
+jj[6] = "...";
+jj[7] = "I wander for days in search of something.";
+jj[8] = "After days of hunger, I can't take it anymore.";
+jj[9] = "I lean against a wall...";
+jj[10] = "I wait for the end.";
+jj[11] = "I close my eyes.";
+jj[12] = "...";
+jj[13] = "I hear footsteps.";
+jj[14] = "What...?";
+jj[15] = "I open my eyes.";
+
+// scene 18 (非決策)
+let kk = [];
+kk[1] = "...Haha.";
+kk[2] = "They're here again.";
+kk[3] = "I hear garbled words.";
+kk[4] = "I wonder if something's wrong with me.";
+kk[5] = "Strangely, I feel relieved by their presence.";
+kk[6] = "Maybe this is the only way to survive.";
+kk[7] = "Is it better to be imprisoned than to starve?";
+kk[8] = "I resign myself.";
+
+// scene 19 (非決策)
+let vv = [];
+vv[1] = "...";
+vv[2] = "Here they are.";
+vv[3] = "I still don't know what they want.";
+vv[4] = "Their stare unsettles me.";
+vv[5] = "At first, I thought they’d test me.";
+vv[6] = "But they simply stare.";
+vv[7] = "...";
+vv[8] = "I sit in the corner.";
+
+// scene 20 (非決策)
+let hh = [];
+hh[1] = "I suppose I'll remain in this cage forever...";
+hh[2] = "At least it's safer than the outside world.";
+hh[3] = "I wonder what happened to everything.";
+hh[4] = "How did I end up here?";
+hh[5] = "I try to recall my last memory...";
+hh[6] = "A land of endless sands...";
+hh[7] = "A dark place where I always slept.";
+hh[8] = "...";
+hh[9] = "The memory hurts.";
+hh[10] = "I force myself to remember.";
+hh[11] = "I crouch down.";
+
+// scene 21 (非決策)
+let nn = [];
+nn[1] = ".";
+nn[2] = "..";
+nn[3] = "...";
+nn[4] = "....";
+nn[5] = ".....";
+nn[6] = "......";
+nn[7] = ".......";
+nn[8] = "... Oh?";
+nn[9] = "... What...?";
+nn[10] = "Eh?";
+nn[11] = "...?";
+nn[12] = "?";
+nn[13] = "???";
+nn[14] = "Is that me?";
+nn[15] = "......";
+nn[16] = "I face the reality.";
+
+// scene 22 (非決策)
+let mm = [];
+mm[1] = "....";
+mm[2] = "So, I'm just a meerkat...?";
+mm[3] = "That explains why my last memory is in a desert...";
+mm[4] = "... Haha.";
+mm[5] = "How absurd.";
+mm[6] = "Even if it was just a dream...";
+mm[7] = "I'm still trapped in a cage in real life.";
+mm[8] = "And how did I even dream of being human?";
+mm[9] = "Anger wells up inside me.";
+mm[10] = "They put me here, caged forever...";
+mm[11] = "The thought of becoming one of them repulses me.";
+mm[12] = "Will I try to escape as in my dream?";
+mm[13] = "I remain a meerkat.";
+mm[14] = "What can I do?";
+mm[15] = "I resign myself.";
+mm[16] = "I resign myself.";
+mm[17] = "I resign myself.";
+mm[18] = "I resign myself.";
+mm[19] = "I resign myself.";
+mm[20] = "I resign myself.";
+mm[21] = "I resign myself.";
+mm[22] = "I resign myself.";
+mm[23] = "I resign myself.";
+mm[24] = "Why are you still here?";
+mm[25] = "You can't help me.";
+mm[26] = "So, please...";
+mm[27] = "Leave me alone.";
+
+//-------------------------------------
+// 索引控制（各場景使用各自的控制變數，均以 1 為起始值） 
+//-------------------------------------
+let i = 1, u = 1, y = 1, ee = 1, r = 1, t = 1, qq = 1, aa = 1, b = 1, c = 1;
+let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
+let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //─────────────────────────────────────
-// 轉場設定：兩個選項 z 和 x（決策場景中兩鍵結果不同，非決策場景中 z 與 x 的結果相同）
+// 轉場設定：使用 z 與 x 作選項（若 z 與 x 結果不同則為決策場景）
 //─────────────────────────────────────
 const transitions = {
   0: { z: 1, x: 2 },
@@ -38,7 +315,7 @@ const transitions = {
   4: { z: 5, x: 5 },
   5: { z: 6, x: 6 },
   6: { z: 7, x: 7 },
-  7: { z: 8, x: 9 },  // 此處為決策場景：依 z 與 x 分流
+  7: { z: 8, x: 9 },  // gameScene 7 為決策場景
   8: { z: 10, x: 10 },
   9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
@@ -53,11 +330,11 @@ const transitions = {
   19: { z: 20, x: 20 },
   20: { z: 21, x: 21 },
   21: { z: 22, x: 22 }
-  // scene 22 為結尾
+  // gameScene 22 為結尾
 };
 
 //─────────────────────────────────────
-// 對話映射：每個 gameScene 對應到某個對話陣列與其控制指標
+// 對話映射：指定每個 gameScene 使用哪個對話陣列與其索引變數名稱
 //─────────────────────────────────────
 const dialogueMapping = {
   0: { arr: s, idxVar: 'i' },
@@ -113,235 +390,6 @@ function setup() {
   createCanvas(700, 394);
   background(0);
   textFont(SuperLegendBoy);
-
-  // 初始化各場景的對話內容（注意：選項文字中的按鍵提示不影響邏輯，僅供參考）
-  s[1] = "..."; s[2] = "... What?"; s[3] = "What is happening?";
-  s[4] = "Where am I? What are they?"; s[5] = "Are those... aliens?";
-  s[6] = "..."; s[7] = "... Am I dreaming?";
-  s[8] = "What are they doing? Are they looking at me?";
-  s[9] = "Wait. Why am I behind the bars? Am I in a cage?";
-  s[10] = "... What should I do?";
-  s[11] = "press [z] to try to talk to the aliens / press [x] to observe silently";
-
-  a[1] = "'Hey! What do you want?'"; a[2] = "...";
-  a[3] = "They just keep staring at me without saying anything.";
-  a[4] = "press [z] to sit in the corner and observe";
-
-  d[1] = "I'll just wait and see what's going to happen.";
-  d[2] = "press [z] to sit in the corner and observe";
-
-  f[1] = "!"; f[2] = "Oh! No one's here now."; f[3] = "What should I do?";
-  f[4] = "press [z] to crash the bars / press [x] to squeeze through the bars";
-
-  g[1] = "After hours of waiting, I fell asleep.";
-  g[2] = "press [z] to wake up";
-
-  h[1] = "Ahhh... It hurts.. Maybe I should stop.";
-  h[2] = "*footstep sounds*";
-  h[3] = "...";
-  h[4] = "... They are back! I don't know what they will do to me...";
-  h[5] = "press [z] to cower in the corner";
-
-  j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
-  j[2] = "...What are they even saying? Please speak English!";
-  j[3] = "press [z] to listen carefully";
-    
-  k[1] = "...When I got closer, they stopped talking.";
-  k[2] = "...";
-  k[3] = "And how many aliens are there?";
-  k[4] = "What did I do to deserve this?";
-  k[5] = "What should I do?";
-  k[6] = "press [z] to scream / press [x] to pace around";
-
-  l[1] = "'Ahhhhhhh!'";
-  l[2] = "'Stop staring! Let me out!'";
-  l[3] = "'What did I do... I'm just an ordinary person...'";
-  l[4] = "'Please let me out...'";
-  l[5] = "One of them frowned a little, but still... nothing happens.";
-  l[6] = "I'm starting to feel a little tired after the yelling...";
-  l[7] = "press [z] to rest in the corner";
-
-  q[1] = "I started to walk around...";
-  q[2] = "I felt that this helped to alleviate some of my anxiety.";
-  q[3] = "...";
-  q[4] = "One of them frowned a little, but still... nothing happens.";
-  q[5] = "I'm starting to feel a little tired.";
-  q[6] = "press [z] to rest in the corner";
-
-  w[1] = "Now it's just me... and them.";
-  w[2] = "Again.";
-  w[3] = "Should I do something to draw their attention?";
-  w[4] = "I've had enough of waiting.";
-  w[5] = "What should I do?";
-  w[6] = "press [z] to hit the wall with my head / press [x] to crazy pluck my hair";
-
-  e[1] = "... Hurting myself actually feels good.. haha...";
-  e[2] = "... Wait! It's coming towards me!";
-  e[3] = "What is it going to do?";
-  e[4] = "... Is that a... syringe?";
-  e[5] = "'Wait! I'll stop! Please don't hurt me!'";
-  e[6] = "I keep yelling but it just keeps getting closer...";
-  e[7] = "...!";
-  e[8] = "It grabs my arm and injects something inside...";
-  e[9] = "... Getting... sleepy... again.";
-  e[10] = "...";
-  e[11] = "press [z] to wake up";
-
-  bb[1] = "I don't know how long I slept...";
-  bb[2] = "But it seems like no one's around.";
-  bb[3] = "I still have no idea why I am here.";
-  bb[4] = "Did I do something bad?";
-  bb[5] = "What happened to my family?";
-  bb[6] = "Are they also caged somewhere in here...?";
-  bb[7] = "I don't understand.";
-  bb[8] = "...";
-  bb[9] = "'Hello...?'";
-  bb[10] = "...";
-  bb[11] = "No one's here. Maybe this is my chance to escape?";
-  bb[12] = "I move closer to the bars and look around.";
-  bb[13] = "...";
-  bb[14] = "Wait! There is something on the floor...";
-  bb[15] = "It was blocked by the bars before.";
-  bb[16] = "Now that I moved closer I can see it.";
-  bb[17] = "Is that the key...? Why is it there?";
-  bb[18] = "Did the alien that frowned drop the key...?";
-
-  bb[19] = "That spot is exactly where it stood...";
-  bb[20] = "It's funny I am sympathized with by an alien.";
-  bb[21] = "What should I do?";
-  bb[22] = "press [z] to use the key / press [x] to stay as a sitting duck";
-
-  ss[1] = "This will be my only chance.";
-  ss[2] = "I squatted down and grabbed the key.";
-  ss[3] = "... It took some time to unlock the lock from the inside.";
-  ss[4] = "... ";
-  ss[5] = "The door lock is finally opened...";
-  ss[6] = "I don't even know what to feel after these uncountable days...";
-  ss[7] = "...";
-  ss[8] = "I ran out immediately without a second thought.";
-  ss[9] = "press [z] to get out";
-
-  ii[1] = "I don't believe I'll have the chance to get out...";
-  ii[2] = "Maybe staying here is the best option.";
-  ii[3] = "I still have food...";
-  ii[4] = "Although I cannot see my family...";
-  ii[5] = "It's still better to stay.";
-  ii[6] = "Right?";
-  ii[7] = "...";
-  ii[8] = "I trust my decision...";
-  ii[9] = "I trust my decision...?";
-  ii[10] = "Really?";
-  ii[11] = "Of course not! I have to get out!";
-  ii[12] = "press [z] to escape";
-
-  oo[1] = "...";
-  oo[2] = "...What in the world?";
-  oo[3] = "What happened?";
-  oo[4] = "It doesn't look like the place I've been before...";
-  oo[5] = "press [z] to look around";
-
-  cc[1] = "...";
-  cc[2] = "What is wrong with the world right now?";
-  cc[3] = "Why does everything just look like ruins?";
-  cc[4] = "How can I survive in this all by myself?";
-  cc[5] = "... Did I make the wrong decision?";
-  cc[6] = "...";
-  cc[7] = "Can anyone help...";
-  cc[8] = "......";
-  cc[9] = "press [z] to try and survive";
-
-  jj[1] = "I'll try...";
-  jj[2] = "I finally got out! I have to at least try.";
-  jj[3] = "Why is it really nothing?";
-  jj[4] = "No humans... no animals... no signs of anything.";
-  jj[5] = "...";
-  jj[6] = "...";
-  jj[7] = "I tried to walk around and find something for days.";
-  jj[8] = "After days of hunger, I cannot take it anymore.";
-  jj[9] = "I leaned against a random wall...";
-  jj[10] = "I'll simply wait for my life to end here.";
-  jj[11] = "I closed my eyes.";
-  jj[12] = "...";
-  jj[13] = "*footstep sounds*";
-  jj[14] = "What...?";
-  jj[15] = "press [z] to open my eyes";
-
-  kk[1] = "...Haha.";
-  kk[2] = "It's them again.";
-  kk[3] = "'Gni&pacsep@otS!.uoy*eucse2r^ot#ereh1era3ew'";
-  kk[4] = "...Is something wrong with me?";
-  kk[5] = "It's funny how I felt relieved by their presence.";
-  kk[6] = "Maybe this is the only way to survive now...";
-  kk[7] = "Is it better to be imprisoned than to starve to death?";
-  kk[8] = "press [z] to close my eyes and let them abduct me again";
-
-  vv[1] = "...";
-  vv[2] = "Of course... Here they are.";
-  vv[3] = "I still have no idea what they want from me.";
-  vv[4] = "How can just staring at me make any difference to them?";
-  vv[5] = "At first, I thought they were going to do tests on me.";
-  vv[6] = "But it turns out they just love to stare at me.";
-  vv[7] = "...";
-  vv[8] = "press [z] to sit in the corner";
-
-  hh[1] = "I guess I'll just be in this cage for the rest of my life...";
-  hh[2] = "It's still better than the outside world, right?";
-  hh[3] = "I wonder what happened to the rest of the world.";
-  hh[4] = "And how did I even get here.";
-  hh[5] = "Let me think of the last memory I remembered...";
-  hh[6] = "It's a place full of sands...";
-  hh[7] = "And I always sleep in a very dark space.";
-  hh[8] = "...";
-  hh[9] = "Wait... trying to remember all the details hurts my head.";
-  hh[10] = "Ugh...";
-  hh[11] = "press [z] to crouch down";
-
-  nn[1] = ".";
-  nn[2] = "..";
-  nn[3] = "...";
-  nn[4] = "....";
-  nn[5] = ".....";
-  nn[6] = "......";
-  nn[7] = ".......";
-  nn[8] = "... Oh?";
-  nn[9] = "... What...?";
-  nn[10] = "Eh?";
-  nn[11] = "...?";
-  nn[12] = "?";
-  nn[13] = "???";
-  nn[14] = "Is that me?";
-  nn[15] = "......";
-  nn[16] = "press [z] to face the reality";
-
-  mm[1] = "....";
-  mm[2] = "So, I am just a meerkat...?";
-  mm[3] = "That's why the last memory I have is in a dessert...";
-  mm[4] = "... Haha.";
-  mm[5] = "How funny is this.";
-  mm[6] = "Even though it was a dream...";
-  mm[7] = "I am still being trapped and caged in real life.";
-  mm[8] = "And how did I even dream of being a human?";
-  mm[9] = "How dare I?";
-  mm[10] = "They are the ones that put me here, and caged me forever...";
-  mm[11] = "The thought of becoming one of them is disgusting.";
-  mm[12] = "Will I plan on escaping just like in the dream?";
-  mm[13] = "Well.";
-  mm[14] = "I am just a meerkat.";
-  mm[15] = "What can I do?";
-  mm[16] = ".";
-  mm[17] = ".";
-  mm[18] = ".";
-  mm[19] = ".";
-  mm[20] = ".";
-  mm[21] = ".";
-  mm[22] = ".";
-  mm[23] = ".";
-  mm[24] = "Oh, why are you still here?";
-  mm[25] = "You can't do anything for me.";
-  mm[26] = "So, please...";
-  mm[27] = "Just leave me alone.";
-
-  // 初始化文字框
   myTextbox = new Textbox();
 }
 
@@ -395,25 +443,25 @@ function draw() {
 //─────────────────────────────────────
 // 輔助函式
 //─────────────────────────────────────
+
+// 取得目前場景的對話內容
 function getCurrentDialogue() {
   let mapping = dialogueMapping[gameScene];
-  if (mapping && mapping.arr) {
-    let idx = window[mapping.idxVar];
-    return mapping.arr[idx] || "";
-  }
-  return "";
+  let idx = window[mapping.idxVar];
+  return mapping.arr[idx] || "";
 }
 
+// 前進目前場景的對話（只允許進行到「最後一筆前」）
 function advanceDialogue() {
   let mapping = dialogueMapping[gameScene];
-  if (mapping && mapping.arr) {
-    let idxVar = mapping.idxVar;
-    if (window[idxVar] < mapping.arr.length) {
-      window[idxVar]++;
-    }
+  let idxVar = mapping.idxVar;
+  // 若目前索引小於 (陣列長度 - 1) 則可進一步推進
+  if (window[idxVar] < mapping.arr.length - 1) {
+    window[idxVar]++;
   }
 }
 
+// 重置指定場景的對話索引為 1
 function resetDialogueIndexForScene(scene) {
   let mapping = dialogueMapping[scene];
   if (mapping) {
@@ -421,6 +469,7 @@ function resetDialogueIndexForScene(scene) {
   }
 }
 
+// 判斷目前場景是否為決策場景（z 與 x 的結果不同）
 function isDecisionScene(scene) {
   if (transitions[scene]) {
     return transitions[scene].z !== transitions[scene].x;
@@ -429,7 +478,7 @@ function isDecisionScene(scene) {
 }
 
 //─────────────────────────────────────
-// 繪製對話區（依據場景區分提示文字）
+// 繪製對話區（依據場景決定提示文字）
 //─────────────────────────────────────
 function drawDialogue(bgImg) {
   if (bgImg) {
@@ -439,10 +488,11 @@ function drawDialogue(bgImg) {
   fill(255);
   textSize(14);
   
-  let prompt = "";
   let mapping = dialogueMapping[gameScene];
   let idx = window[mapping.idxVar];
+  let prompt = "";
   if (isDecisionScene(gameScene)) {
+    // 若尚未進到最後一筆，提示滑鼠點擊；最後一筆則提示按 z 或 x
     if (idx < mapping.arr.length - 1) {
       prompt = "- click to continue -";
     } else {
@@ -457,13 +507,13 @@ function drawDialogue(bgImg) {
   text(textContent, 28, 350);
 }
 
-// 初始場景（gameScene 0）
+// 初始場景（gameScene 0）使用
 function drawBaseScene() {
   drawDialogue(alienlabImg);
 }
 
 //─────────────────────────────────────
-// 特殊場景繪製（透明度效果）
+// 特殊場景繪製（帶透明度效果）
 //─────────────────────────────────────
 function drawTranquilizerScene() {
   push();
@@ -526,30 +576,32 @@ function drawNNScene() {
 // 輸入處理
 //─────────────────────────────────────
 
-// 滑鼠點擊：在非決策場景中或決策場景中尚未顯示最後一行時，點擊可推進對話
+// 滑鼠點擊：
+// • 非決策場景：若尚未顯示到最後一筆則推進；若已到最後一筆則自動轉場
+// • 決策場景：僅在未到最後一筆時推進，最後一筆時等待按鍵輸入
 function mousePressed() {
   if (sceneNumber === 1) {
     let mapping = dialogueMapping[gameScene];
     let idx = window[mapping.idxVar];
-    if (!isDecisionScene(gameScene)) {
-      if (idx < mapping.arr.length) {
+    if (isDecisionScene(gameScene)) {
+      if (idx < mapping.arr.length - 1) {
+        advanceDialogue();
+      }
+      // 若已到最後一筆，則等待 keyPressed 處理
+    } else {
+      if (idx < mapping.arr.length - 1) {
         advanceDialogue();
       } else {
-        // 對話讀完後自動轉場（非決策場景，z 與 x 皆相同）
+        // 非決策場景，對話全部讀完後自動轉場（z 與 x 結果相同）
         let nextScene = transitions[gameScene] ? transitions[gameScene].z : gameScene;
         gameScene = nextScene;
         resetDialogueIndexForScene(gameScene);
-      }
-    } else {
-      // 決策場景：若還未到最後一行，滑鼠點擊可前進；到最後一行時不再動作，等待 z/x 鍵
-      if (idx < mapping.arr.length - 1) {
-        advanceDialogue();
       }
     }
   }
 }
 
-// 鍵盤輸入：僅在決策場景且對話已推進至最後一行時，按 z 或 x 才觸發轉場
+// 鍵盤輸入：僅在決策場景且對話已進至最後一筆時才處理
 function keyPressed() {
   if (sceneNumber === 0 && key === ' ') {
     sceneNumber = 1;
@@ -557,15 +609,12 @@ function keyPressed() {
     return;
   }
   if (sceneNumber === 1 && (key === 'z' || key === 'x')) {
-    if (isDecisionScene(gameScene)) {
-      let mapping = dialogueMapping[gameScene];
-      let idx = window[mapping.idxVar];
-      // 僅在最後一行（選項提示已顯示時）才進行轉場
-      if (idx === mapping.arr.length - 1) {
-        let nextScene = transitions[gameScene][key];
-        gameScene = nextScene;
-        resetDialogueIndexForScene(gameScene);
-      }
+    let mapping = dialogueMapping[gameScene];
+    let idx = window[mapping.idxVar];
+    if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
+      let nextScene = transitions[gameScene][key];
+      gameScene = nextScene;
+      resetDialogueIndexForScene(gameScene);
     }
   }
 }
