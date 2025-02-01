@@ -28,7 +28,7 @@ var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //------------------------------
-// 決策場景分支對照表（含 "press" 的行只有在最後一行時才接受鍵盤輸入）
+// 決策場景分支對照表（所有含 "press" 的對話均視為決策，僅在最後一行才接受鍵盤輸入）
 //------------------------------
 var decisionMap = {
   0: { z: 1, x: 2 },      // s[11] in scene 0
@@ -218,7 +218,7 @@ function setup() {
   ii[6] = "Right?";
   ii[7] = "...";
   ii[8] = "I trust my decision...";
-  ii[9] = "I trust my decision...?"; 
+  ii[9] = "I trust my decision...?";
   ii[10] = "Really?";
   ii[11] = "Of course not! I have to get out!";
   ii[12] = "press [z] to escape";
@@ -359,8 +359,8 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 將文字框高度調整為 50，避免超出畫面
-    rect(15, 330, 680, 50);
+    // 調整文字框上移：將 y 座標由 330 改為 300；高度設為 50
+    rect(15, 300, 680, 50);
     noStroke();
     fill(255);
     textSize(14);
@@ -373,7 +373,6 @@ class Textbox {
 //------------------------------
 // 輸入處理
 //------------------------------
-// 封面狀態：僅接受空白鍵啟動
 function keyPressed() {
   if (sceneNumber === 0) {
     if (key === ' ') {
@@ -386,7 +385,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 僅當當前行包含 "press" 且為該陣列最後一行時才接受鍵盤輸入
+    // 僅當目前行包含 "press" 且已為該陣列最後一筆時，才接受鍵盤輸入
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -401,16 +400,15 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  if (sceneNumber === 0) return; // 封面忽略鼠標點擊
+  if (sceneNumber === 0) return;
   if (sceneNumber === 1) {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前行為決策提示且為最後一行，則不接受鼠標點擊
+    // 若目前行含有 "press" 且為最後一筆，則不接受鼠標點擊
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       return;
     }
-    // 僅在當前索引小於 (陣列長度 - 1) 時推進，避免跳過決策提示
     if (idx < mapping.arr.length - 1) {
       advanceCurrentIndex();
     } else {
@@ -458,7 +456,7 @@ var dialogueMapping = {
 };
 
 //------------------------------
-// 通用場景繪製函式（用於非特殊場景）
+// 通用場景繪製函式（非特殊場景）
 //------------------------------
 function drawScene(textContent, bgImg) {
   if (bgImg) image(bgImg, 0, 0);
@@ -571,6 +569,7 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //------------------------------
 function drawBaseScene() {
+  // 初始場景（s 陣列）也顯示在牢籠中
   drawDialogueWithBars(alienlabImg);
 }
 
@@ -590,7 +589,7 @@ function draw() {
     switch (gameScene) {
       case 0: drawBaseScene(); break;
       case 1: drawSceneWithBars(a[u], alienlabImg); break;
-      case 2: drawScene(d[y], alienlabImg); break;
+      case 2: drawSceneWithBars(d[y], alienlabImg); break;
       case 3: drawScene(g[ee], null); break;
       case 4: drawSceneWithBars(f[r], withoutalienlabImg); break;
       case 5: drawSceneWithBars(h[t], withoutalienlabImg); break;
