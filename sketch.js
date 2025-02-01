@@ -2,11 +2,10 @@
 // 0. 全域變數
 //-------------------------------------
 let sceneNumber = 0;   // 0 = 封面, 1 = 正式遊戲
-let firstScene = 0;   
-let gameScene = 0;    
+let gameScene = 0;     // 控制正式遊戲中的場景
 
-// 透明度控制
-let transparency = 255, transparency2 = 255, transparency3 = 0;
+// 透明度控制（部分特殊場景使用）
+let transparency2 = 255, transparency3 = 0;
 let transparency4 = 255, transparency5 = 0, transparency6 = 255, transparency7 = 0;
 
 // 圖片資源
@@ -17,25 +16,54 @@ let ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 let SuperLegendBoy; 
 
-// 對話陣列 (完整保留原始內容)
+// 對話陣列（完全保留你原本的內容）
 let s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 各場景的對話索引控制（從 1 開始）
+// 各場景對話索引控制（各自從 1 開始）
 let i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //-------------------------------------
-// 決策場景的分支對照表（只處理真正有兩條不同分支的場景）
-// 例如 scene 0 的選項原本是 T 與 O，我們改為 z 與 x
+// 決策場景的分支對照表（真正有兩條不同分支的場景）
+// 例如：
+//   在 scene 0 (s[11])：按 z 進入 gameScene 1，按 x 進入 gameScene 2
+//   在 scene 7 (k[6])：按 z 進入 gameScene 8，按 x 進入 gameScene 9
+//   在 scene 12 (bb[22])：按 z 進入 gameScene 13，按 x 進入 gameScene 14
 //-------------------------------------
 const decisionMap = {
   0: { z: 1, x: 2 },
   7: { z: 8, x: 9 },
   12: { z: 13, x: 14 }
+};
+
+//-------------------------------------
+// 轉場設定（非決策場景中，當對話全部推進完後自動切換；左右結果相同）
+//-------------------------------------
+const transitions = {
+  1: { z: 3, x: 3 },
+  2: { z: 3, x: 3 },
+  3: { z: 4, x: 4 },
+  4: { z: 5, x: 5 },
+  5: { z: 6, x: 6 },
+  6: { z: 7, x: 7 },
+  8: { z: 10, x: 10 },
+  9: { z: 10, x: 10 },
+  10: { z: 11, x: 11 },
+  11: { z: 12, x: 12 },
+  13: { z: 14, x: 14 },
+  14: { z: 15, x: 15 },
+  15: { z: 16, x: 16 },
+  16: { z: 17, x: 17 },
+  17: { z: 18, x: 18 },
+  18: { z: 19, x: 19 },
+  19: { z: 20, x: 20 },
+  20: { z: 21, x: 21 },
+  21: { z: 22, x: 22 }
+  // 若某場景無特殊分支，則玩家只用滑鼠推進對話後自動轉換（以 z 對應下一場景）
 };
 
 //-------------------------------------
@@ -67,7 +95,7 @@ function setup() {
   textFont(SuperLegendBoy);
   background(0);
 
-  // 初始化所有對話內容（完全保留原始內容）
+  // 初始化對話內容（完全保留原始文本，只將提示鍵換為 z 與 x）
   s[1] = "..."; 
   s[2] = "... What?"; 
   s[3] = "What is happening?";
@@ -343,35 +371,36 @@ function keyPressed() {
     }
     return;
   }
-  // 遊戲狀態：若當前對話文字含有分支提示（即包含 "press"）且此場景屬於決策場景（decisionMap 中有設定）
+  // 遊戲狀態：當前對話若含有 "press" 並且該場景屬於決策場景，則只接受 z 或 x
   if (sceneNumber === 1) {
     let mapping = dialogueMapping[gameScene];
-    let currentText = mapping.arr[ window[mapping.idxVar] ];
+    let idx = window[mapping.idxVar];
+    let currentText = mapping.arr[idx] || "";
     if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
       if (key === 'z' || key === 'x') {
         gameScene = decisionMap[gameScene][key];
         resetSceneIndexes(gameScene);
       }
     }
-    // 否則（非決策分支）保留原有邏輯（例如透過滑鼠點擊推進對話）
   }
 }
 
-// 鼠標點擊：僅用於推進當前場景對話（若遇決策提示，等待鍵盤 z/x）
+// 鼠標點擊：僅用於推進當前場景對話（若遇決策提示則不接受點擊）
 function mousePressed() {
   if (sceneNumber === 0) return; // 封面忽略鼠標點擊
   if (sceneNumber === 1) {
     let mapping = dialogueMapping[gameScene];
     let idx = window[mapping.idxVar];
-    // 如果當前對話文字含有 "press" 並且該場景是決策場景，則不接受鼠標點擊
-    if (decisionMap[gameScene] && mapping.arr[idx] && mapping.arr[idx].indexOf("press") !== -1) {
+    let currentText = mapping.arr[idx] || "";
+    // 若當前對話含有 "press" 且此場景屬於決策場景，則不接受鼠標點擊
+    if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
       return;
     }
-    // 否則推進當前場景的對話
+    // 否則推進當前場景對話
     if (idx < mapping.arr.length) {
       advanceCurrentIndex();
     } else {
-      // 若對話全部讀完，則自動依原本轉場設定進入下一場景（這裡用轉場設定中的 z 值，因為非決策情況左右相同）
+      // 當對話全部讀完（非決策場景），自動依 transitions 切換（左右結果相同）
       if (transitions[gameScene]) {
         gameScene = transitions[gameScene].z;
         resetSceneIndexes(gameScene);
@@ -380,7 +409,7 @@ function mousePressed() {
   }
 }
 
-// 僅推進當前場景對話索引（只改變該場景的索引變數）
+// 僅推進當前場景對話索引（只改變該場景專用索引）
 function advanceCurrentIndex() {
   let mapping = dialogueMapping[gameScene];
   let idxVar = mapping.idxVar;
@@ -388,7 +417,7 @@ function advanceCurrentIndex() {
 }
 
 //-------------------------------------
-// 對話映射：指定每個 gameScene 使用哪個對話陣列及其索引變數名稱
+// 對話映射：指定每個 gameScene 使用哪個對話陣列及其專用索引變數名稱
 //-------------------------------------
 const dialogueMapping = {
   0: { arr: s, idxVar: 'i' },
@@ -417,39 +446,10 @@ const dialogueMapping = {
 };
 
 //-------------------------------------
-// 轉場設定：依原始邏輯（若為決策場景，分支不同；非決策場景左右相同）
-//-------------------------------------
-const transitions = {
-  0: { z: 1, x: 2 },
-  1: { z: 3, x: 3 },
-  2: { z: 3, x: 3 },
-  3: { z: 4, x: 4 },
-  4: { z: 5, x: 5 },
-  5: { z: 6, x: 6 },
-  6: { z: 7, x: 7 },
-  7: { z: 8, x: 9 },
-  8: { z: 10, x: 10 },
-  9: { z: 10, x: 10 },
-  10: { z: 11, x: 11 },
-  11: { z: 12, x: 12 },
-  12: { z: 13, x: 14 },
-  13: { z: 14, x: 14 },
-  14: { z: 15, x: 15 },
-  15: { z: 16, x: 16 },
-  16: { z: 17, x: 17 },
-  17: { z: 18, x: 18 },
-  18: { z: 19, x: 19 },
-  19: { z: 20, x: 20 },
-  20: { z: 21, x: 21 },
-  21: { z: 22, x: 22 }
-  // scene 22 為結尾
-};
-
-//-------------------------------------
-// 繪製文字框與對話的通用函式
+// 通用場景繪製函式（用於非特殊場景）
 //-------------------------------------
 function drawScene(textContent, bgImg) {
-  if(bgImg) image(bgImg, 0, 0);
+  if (bgImg) image(bgImg, 0, 0);
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -458,12 +458,35 @@ function drawScene(textContent, bgImg) {
 }
 
 //-------------------------------------
-// 各特殊場景繪製函式（帶透明度效果）
+// 用於需要依對話映射繪製的場景（會根據對話索引從對話映射中取出文字）
+//-------------------------------------
+function drawDialogue(bgImg) {
+  if (bgImg) image(bgImg, 0, 0);
+  myTextbox.showTextbox();
+  fill(255);
+  textSize(14);
+  let mapping = dialogueMapping[gameScene];
+  let idx = window[mapping.idxVar];
+  let currentText = mapping.arr[idx] || "";
+  let prompt = "";
+  if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
+    prompt = "- press z or x to choose -";
+  } else {
+    prompt = "- click to continue -";
+  }
+  text(prompt, 248, 40);
+  text(currentText, 28, 350);
+}
+
+//-------------------------------------
+// 特殊場景繪製函式（帶透明度效果）
 //-------------------------------------
 function drawTranquilizerScene() {
   push();
-  // 只有當 e 的對話進度大於 8 時才開始逐漸變黑
-  if (ff > 8 && transparency2 > 0) transparency2 -= 0.9;
+  // 只有當 e 的對話進度大於 8（即 e[9] 之後）時開始降低透明度
+  if (ff > 8 && transparency2 > 0) {
+    transparency2 -= 0.9;
+  }
   tint(255, transparency2);
   image(alientranquilizerImg, 0, 0);
   image(barsImg, 0, 0);
@@ -522,50 +545,49 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //-------------------------------------
 function drawBaseScene() {
-  // 使用 alienlabImg 為背景呈現初始對話
-  drawScene(alienlabImg);
+  // 以 alienlabImg 為背景呈現初始對話（使用對話映射 s）
+  drawDialogue(alienlabImg);
 }
 
 //-------------------------------------
-// 3. draw() —— 主循環（只定義一次）
+// 3. draw() —— 主循環（僅定義一次）
 //-------------------------------------
 function draw() {
   background(0);
-  switch(sceneNumber) {
-    case 0: // 封面
-      image(startImg, 0, 0);
-      fill(255);
-      textSize(30);
-      text("Emohw2enr@uoyem*oclew", 95, 330);
-      textSize(13);
-      text("- press space to continue -", 230, 365);
-      break;
-    case 1: // 遊戲主場景
-      switch(gameScene) {
-        case 0: drawBaseScene(); break;
-        case 1: drawScene(a[u], alienlabImg); break;
-        case 2: drawScene(d[y], alienlabImg); break;
-        case 3: drawScene(g[ee], null); break;
-        case 4: drawScene(f[r], withoutalienlabImg); break;
-        case 5: drawScene(h[t], withoutalienlabImg); break;
-        case 6: drawScene(j[qq], aliencrowd1Img); break;
-        case 7: drawScene(k[aa], aliencrowdImg); break;
-        case 8: drawScene(l[b], aliencrowdImg); break;
-        case 9: drawScene(q[c], aliencrowdImg); break;
-        case 10: drawScene(w[dd], alienlabImg); break;
-        case 11: drawTranquilizerScene(); break;
-        case 12: drawBBScene(); break;
-        case 13: drawScene(ss[sss], withoutalienlabImg); break;
-        case 14: drawScene(ii[iii], withoutalienlabImg); break;
-        case 15: drawScene(oo[ooo], ruin2Img); break;
-        case 16: drawScene(cc[ccc], ruinImg); break;
-        case 17: drawJJScene(); break;
-        case 18: drawKKScene(); break;
-        case 19: drawScene(vv[vvv], aliencrowdImg); break;
-        case 20: drawHHScene(); break;
-        case 21: drawNNScene(); break;
-        case 22: drawScene(mm[mmm], meerkatImg); break;
-      }
-      break;
+  if (sceneNumber === 0) {
+    // 封面：只接受空白鍵
+    image(startImg, 0, 0);
+    fill(255);
+    textSize(30);
+    text("Emohw2enr@uoyem*oclew", 95, 330);
+    textSize(13);
+    text("- press space to continue -", 230, 365);
+  } else if (sceneNumber === 1) {
+    // 遊戲主場景：根據 gameScene 切換各場景繪製
+    switch(gameScene) {
+      case 0: drawBaseScene(); break;
+      case 1: drawScene(a[u], alienlabImg); break;
+      case 2: drawScene(d[y], alienlabImg); break;
+      case 3: drawScene(g[ee], null); break;
+      case 4: drawScene(f[r], withoutalienlabImg); break;
+      case 5: drawScene(h[t], withoutalienlabImg); break;
+      case 6: drawScene(j[qq], aliencrowd1Img); break;
+      case 7: drawScene(k[aa], aliencrowdImg); break;
+      case 8: drawScene(l[b], aliencrowdImg); break;
+      case 9: drawScene(q[c], aliencrowdImg); break;
+      case 10: drawScene(w[dd], alienlabImg); break;
+      case 11: drawTranquilizerScene(); break;
+      case 12: drawBBScene(); break;
+      case 13: drawScene(ss[sss], withoutalienlabImg); break;
+      case 14: drawScene(ii[iii], withoutalienlabImg); break;
+      case 15: drawScene(oo[ooo], ruin2Img); break;
+      case 16: drawScene(cc[ccc], ruinImg); break;
+      case 17: drawJJScene(); break;
+      case 18: drawKKScene(); break;
+      case 19: drawScene(vv[vvv], aliencrowdImg); break;
+      case 20: drawHHScene(); break;
+      case 21: drawNNScene(); break;
+      case 22: drawScene(mm[mmm], meerkatImg); break;
+    }
   }
 }
