@@ -16,47 +16,61 @@ var ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 var SuperLegendBoy;
 
-// 對話陣列（完全保留原始內容）
+// 對話陣列（完全保留原始內容，不作修改）
 var s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 各場景的對話索引控制（從 1 開始）
-// 為使這些變數可由 window["變數名稱"] 取值，請用 var 宣告
+// 各場景對話索引（從 1 開始）；請用 var 以便 window["變數名"] 可正確存取
 var i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
-// 決策場景分支對照表（僅對真正有兩條分支的場景有效）
+//------------------------------
+// 決策場景分支對照表（對所有含有 "press" 的對話都視為決策，無論是否有兩種選項）
+//------------------------------
 var decisionMap = {
-  0: { z: 1, x: 2 },
-  7: { z: 8, x: 9 },
-  12: { z: 13, x: 14 }
+  0: { z: 1, x: 2 },      // s[11] in scene 0
+  2: { z: 3, x: 3 },      // d[2] in scene 2 (單一分支：均→ scene 3)
+  4: { z: 5, x: 5 },      // f[4] in scene 4
+  5: { z: 6, x: 6 },      // h[5] in scene 5
+  6: { z: 7, x: 7 },      // j[3] in scene 6
+  7: { z: 8, x: 9 },      // k[6] in scene 7
+  8: { z: 10, x: 10 },    // l[3] in scene 8
+  9: { z: 10, x: 10 },    // q[6] in scene 9
+  10: { z: 11, x: 11 },   // w[5] in scene 10
+  11: { z: 12, x: 12 },   // e[11] in scene 11
+  12: { z: 13, x: 14 },   // bb[22] in scene 12
+  13: { z: 15, x: 15 },   // ss[9] in scene 13
+  14: { z: 15, x: 15 },   // ii[12] in scene 14
+  15: { z: 16, x: 16 },   // oo[5] in scene 15
+  16: { z: 17, x: 17 },   // cc[9] in scene 16
+  17: { z: 18, x: 18 },   // jj[15] in scene 17
+  18: { z: 19, x: 19 },   // kk[8] in scene 18
+  19: { z: 20, x: 20 },   // vv[8] in scene 19
+  21: { z: 22, x: 22 }    // nn[16] in scene 21
+  // 其他場景若對話中無 "press" 或不需要決策，則以滑鼠點擊推進
 };
 
-// 轉場設定（非決策場景中，當對話全部推進完後自動切換；左右結果相同）
+//------------------------------
+// 轉場設定（非決策場景中，對話讀完後自動切換，左右結果相同）
+//------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
-  2: { z: 3, x: 3 },
   3: { z: 4, x: 4 },
-  4: { z: 5, x: 5 },
   5: { z: 6, x: 6 },
-  6: { z: 7, x: 7 },
   8: { z: 10, x: 10 },
-  9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
   13: { z: 14, x: 14 },
-  14: { z: 15, x: 15 },
   15: { z: 16, x: 16 },
   16: { z: 17, x: 17 },
   17: { z: 18, x: 18 },
   18: { z: 19, x: 19 },
   19: { z: 20, x: 20 },
-  20: { z: 21, x: 21 },
-  21: { z: 22, x: 22 }
-  // 若無特殊分支，則用滑鼠推進後自動轉換（以 z 值）
+  20: { z: 21, x: 21 }
+  // 若某場景無特殊分支，則按滑鼠推進後自動以 z 值轉換
 };
 
 //------------------------------
@@ -87,7 +101,7 @@ function setup() {
   textFont(SuperLegendBoy);
   background(0);
 
-  // 初始化對話內容（完全保留原始內容，僅將提示鍵換成 z 與 x）
+  // 初始化對話內容（完全保留原始文本，僅將提示鍵改為 z 與 x）
   s[1] = "...";
   s[2] = "... What?";
   s[3] = "What is happening?";
@@ -367,10 +381,15 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前對話包含 "press" 且該場景屬於決策場景，僅接受 z 或 x
-    if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
+    // 如果對話中含 "press"，則僅接受鍵盤輸入
+    if (currentText.indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
-        gameScene = decisionMap[gameScene][key.toLowerCase()];
+        // 如果當前場景在 decisionMap 中，則依照 decisionMap 切換；否則若不在 decisionMap，則統一以 transitions 切換
+        if (decisionMap[gameScene]) {
+          gameScene = decisionMap[gameScene][key.toLowerCase()];
+        } else if (transitions[gameScene]) {
+          gameScene = transitions[gameScene].z;
+        }
         resetSceneIndexes(gameScene);
       }
     }
@@ -383,8 +402,8 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若為決策場景且對話包含 "press"，則不接受鼠標點擊（等待鍵盤）
-    if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
+    // 若對話含 "press"（即決策提示），則不接受鼠標點擊
+    if (currentText.indexOf("press") !== -1) {
       return;
     }
     if (idx < mapping.arr.length) {
@@ -457,7 +476,7 @@ function drawDialogue(bgImg) {
   var idx = window[mapping.idxVar];
   var currentText = mapping.arr[idx] || "";
   var prompt = "";
-  if (decisionMap[gameScene] && currentText.indexOf("press") !== -1) {
+  if (currentText.indexOf("press") !== -1) {
     prompt = "- press z or x to choose -";
   } else {
     prompt = "- click to continue -";
@@ -471,6 +490,7 @@ function drawDialogue(bgImg) {
 //------------------------------
 function drawTranquilizerScene() {
   push();
+  // 只有當 e 的對話進度大於 8（即 e[9] 之後）時開始降低透明度
   if (ff > 8 && transparency2 > 0) {
     transparency2 -= 0.9;
   }
@@ -532,6 +552,7 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //------------------------------
 function drawBaseScene() {
+  // 使用 alienlabImg 為背景呈現初始對話（s 陣列）
   drawDialogue(alienlabImg);
 }
 
@@ -541,6 +562,7 @@ function drawBaseScene() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
+    // 封面：只接受空白鍵
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
