@@ -18,7 +18,7 @@ let SuperLegendBoy;
 //-------------------------------------
 // 對話內容（採用 1 為起始索引，已移除所有鍵盤提示文字）
 //-------------------------------------
-// scene 0（決策場景）
+// scene 0（決策場景）：對話內容最後一筆為決策提示
 let s = [];
 s[1] = "..."; 
 s[2] = "... What?"; 
@@ -266,7 +266,7 @@ nn[14] = "Is that me?";
 nn[15] = "......";
 nn[16] = "I face the reality.";
 
-// scene 22（非決策）
+// scene 22（非決策，結尾）
 let mm = [];
 mm[1] = "....";
 mm[2] = "So, I'm just a meerkat...?";
@@ -304,7 +304,7 @@ let dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 let kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //─────────────────────────────────────
-// 轉場設定（若為決策場景，左右結果不同；非決策場景左右結果相同）
+// 轉場設定（決策場景左右結果不同；非決策場景左右結果相同）
 //─────────────────────────────────────
 const transitions = {
   0: { z: 1, x: 2 },
@@ -314,7 +314,7 @@ const transitions = {
   4: { z: 5, x: 5 },
   5: { z: 6, x: 6 },
   6: { z: 7, x: 7 },
-  7: { z: 8, x: 9 },  // 決策場景
+  7: { z: 8, x: 9 },  // 決策場景：scene 0 與 scene 7
   8: { z: 10, x: 10 },
   9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
@@ -362,12 +362,6 @@ const dialogueMapping = {
 };
 
 //-------------------------------------
-// 決策按鈕參數（決策時在文字框內顯示左右按鈕區域）
-//-------------------------------------
-const decisionLeftButton = { x: 20, y: 335, w: 300, h: 40 };
-const decisionRightButton = { x: 360, y: 335, w: 300, h: 40 };
-
-//-------------------------------------
 // 1. preload()
 //-------------------------------------
 function preload() {
@@ -402,17 +396,17 @@ function setup() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
-    // 封面：點擊空白區域開始遊戲
+    // 封面：只顯示空白鍵提示，不接受鼠標點擊
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
     text("Emohw2enr@uoyem*oclew", 95, 330);
     textSize(13);
-    text("- click to continue -", 230, 365);
+    text("- press space to continue -", 230, 365);
   } else if (sceneNumber === 1) {
-    // 根據 gameScene 選擇對話畫面（特殊場景維持原效果）
+    // 遊戲主場景根據 gameScene 繪製對話畫面
     switch(gameScene) {
-      case 0: drawBaseScene(); break;
+      case 0: drawDialogue(alienlabImg); break;
       case 1: drawDialogue(alienlabImg); break;
       case 2: drawDialogue(alienlabImg); break;
       case 3: drawDialogue(null); break;
@@ -454,7 +448,7 @@ function getCurrentDialogue() {
 }
 
 //─────────────────────────────────────
-// 前進對話（只在尚未達到最後一筆時推進）
+// 前進對話（僅在尚未達到最後一筆時推進）
 //─────────────────────────────────────
 function advanceDialogue() {
   let mapping = dialogueMapping[gameScene];
@@ -485,7 +479,7 @@ function isDecisionScene(scene) {
 }
 
 //─────────────────────────────────────
-// 繪製對話區：提示文字固定為 "- click to continue -"
+// 繪製對話區
 //─────────────────────────────────────
 function drawDialogue(bgImg) {
   if (bgImg) {
@@ -495,13 +489,14 @@ function drawDialogue(bgImg) {
   fill(255);
   textSize(14);
   
-  let prompt = "- click to continue -";
   let mapping = dialogueMapping[gameScene];
   let idx = window[mapping.idxVar];
-  // 若為決策場景且已推進到最後一筆，則提示「- click a choice -」並畫出決策按鈕
+  let prompt = "";
+  // 若為決策場景且對話推進到最後一筆，提示「- press z or x to choose -」
   if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
-    prompt = "- click a choice -";
-    drawDecisionButtons();
+    prompt = "- press z or x to choose -";
+  } else {
+    prompt = "- click to continue -";
   }
   text(prompt, 248, 40);
   
@@ -509,41 +504,11 @@ function drawDialogue(bgImg) {
   text(textContent, 28, 350);
 }
 
-// 初始場景（gameScene 0）使用
+//─────────────────────────────────────
+// 初始場景使用
+//─────────────────────────────────────
 function drawBaseScene() {
   drawDialogue(alienlabImg);
-}
-
-//─────────────────────────────────────
-// 決策按鈕繪製（會在文字框內顯示左右兩個按鈕）
-//─────────────────────────────────────
-function drawDecisionButtons() {
-  let leftText = "", rightText = "";
-  if (gameScene === 0) {
-    leftText = "Talk to aliens";
-    rightText = "Observe silently";
-  } else if (gameScene === 7) {
-    leftText = "Scream";
-    rightText = "Pace around";
-  } else {
-    leftText = "Option 1";
-    rightText = "Option 2";
-  }
-  // 左側按鈕（綠色）
-  fill(50, 150, 50);
-  rect(decisionLeftButton.x, decisionLeftButton.y, decisionLeftButton.w, decisionLeftButton.h, 5);
-  fill(255);
-  textSize(16);
-  textAlign(CENTER, CENTER);
-  text(leftText, decisionLeftButton.x + decisionLeftButton.w/2, decisionLeftButton.y + decisionLeftButton.h/2);
-  
-  // 右側按鈕（藍色）
-  fill(50, 50, 150);
-  rect(decisionRightButton.x, decisionRightButton.y, decisionRightButton.w, decisionRightButton.h, 5);
-  fill(255);
-  text(rightText, decisionRightButton.x + decisionRightButton.w/2, decisionRightButton.y + decisionRightButton.h/2);
-  
-  textAlign(LEFT, BASELINE);
 }
 
 //─────────────────────────────────────
@@ -607,45 +572,50 @@ function drawNNScene() {
 }
 
 //─────────────────────────────────────
-// 輸入處理：全程只用滑鼠點擊推進
+// 輸入處理
 //─────────────────────────────────────
-function mousePressed() {
-  // 封面點擊：開始遊戲
+
+// 鍵盤輸入：封面只接受空白鍵啟動；遊戲內在決策場景時只接受 z 或 x
+function keyPressed() {
   if (sceneNumber === 0) {
-    sceneNumber = 1;
-    gameScene = 0;
+    // 只有空白鍵才啟動遊戲
+    if (key === ' ') {
+      sceneNumber = 1;
+      gameScene = 0;
+      resetDialogueIndexForScene(gameScene);
+    }
     return;
   }
-  
   if (sceneNumber === 1) {
     let mapping = dialogueMapping[gameScene];
     let idx = window[mapping.idxVar];
-    
-    // 若為決策場景且已進到最後一筆，檢查是否點擊在決策按鈕上
+    // 在決策場景且對話推進到最後一筆時，才接受 z 或 x 鍵選擇分支
     if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
-      if (mouseX >= decisionLeftButton.x && mouseX <= decisionLeftButton.x + decisionLeftButton.w &&
-          mouseY >= decisionLeftButton.y && mouseY <= decisionLeftButton.y + decisionLeftButton.h) {
-        let nextScene = transitions[gameScene].z;
+      if (key === 'z' || key === 'x') {
+        let nextScene = transitions[gameScene][key];
         gameScene = nextScene;
         resetDialogueIndexForScene(gameScene);
-        return;
       }
-      if (mouseX >= decisionRightButton.x && mouseX <= decisionRightButton.x + decisionRightButton.w &&
-          mouseY >= decisionRightButton.y && mouseY <= decisionRightButton.y + decisionRightButton.h) {
-        let nextScene = transitions[gameScene].x;
-        gameScene = nextScene;
-        resetDialogueIndexForScene(gameScene);
-        return;
-      }
-      // 點擊在按鈕外則不動作
+    }
+  }
+}
+
+// 鼠標點擊：僅在遊戲內（sceneNumber === 1）非決策場景（或決策場景但尚未推進到最後一筆）時推進對話
+function mousePressed() {
+  // 封面忽略鼠標點擊
+  if (sceneNumber === 0) return;
+  if (sceneNumber === 1) {
+    let mapping = dialogueMapping[gameScene];
+    let idx = window[mapping.idxVar];
+    // 如果是決策場景且已到最後一筆，則不接受鼠標點擊（等待鍵盤 z/x）
+    if (isDecisionScene(gameScene) && idx === mapping.arr.length - 1) {
       return;
     }
-    
-    // 若還有對話尚未推進，則進一步推進
+    // 尚未到最後一筆則進一步推進
     if (idx < mapping.arr.length - 1) {
       advanceDialogue();
     } else {
-      // 非決策場景，對話結束後自動依轉場設定進入下一場景
+      // 若非決策場景且對話全部讀完，則自動依轉場設定轉換（此時 z 與 x 結果相同）
       let nextScene = transitions[gameScene] ? transitions[gameScene].z : gameScene;
       gameScene = nextScene;
       resetDialogueIndexForScene(gameScene);
