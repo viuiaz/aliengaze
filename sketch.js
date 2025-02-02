@@ -6,6 +6,8 @@ var gameScene = 0;      // 正式遊戲中的場景編號
 var alphaLab = 255;       // 普通實驗室的透明度
 var alphaTranquil = 0;    // tranquilizer 圖片的透明度
 var isFading = false;     // 是否正在進行淡入
+var alphaBlack = 0;   // 用於淡入黑屏
+var isSleeping = false;  // 代表是否開始睡著淡黑
 
 // 透明度控制（特殊場景用）
 var transparency2 = 255, transparency3 = 0;
@@ -510,72 +512,94 @@ function drawDialogueWithBars(bgImg) {
 // 特殊場景繪製函式（帶透明度效果）
 //------------------------------
 function drawTranquilizerScene() {
-  // 1) 判斷目前對話行數 ff
-  var idx = ff;         // e 陣列走到第幾行
-  var txt = e[idx];     // 目前要顯示的文字內容（比如 e[2] ... e[8]）
-  
-  // 2) 根據對話行數，決定是否要啟動淡入
-  if (idx === 2) {      
-    // 當對話走到 e[2] 時，設定 isFading = true，開始做淡入
-    isFading = true;
+  // 1) 取得現在對話的位置
+  var idx = ff;          // ff 是 e 陣列目前走到哪裡
+  var txt = e[idx] || "";  // 目前那行文字
+
+  // 2) 依對話進度決定是否觸發淡入
+  //    - 當看到 e[2]，就開始淡入 tranquilizer 圖
+  if (idx === 2) {
+    isFadingTranquil = true;
   }
-  if (idx >= 8) {
-    // 當對話走到 e[8]，就可以直接顯示 alientranquilizer2Img
-    // 不需要淡入，把 tranquilizer2 圖顯示出來就好
-    // 後面會有具體繪圖的寫法
+  //    - 當走到 e[9] (「... Getting... sleepy... again.」)，開始淡入黑屏
+  if (idx === 9) {
+    isFadingBlack = true;
   }
 
-  // 3) 畫面背景：用 push/pop 來做 tint，不互相干擾
-  //    - 若 ff < 8，就繼續顯示「普通實驗室」+「淡入 tranquilizer 圖」 
-  //    - 若 ff >= 8，就改成顯示 tranquilizer2Img
-  if (idx < 8) {
-    // (A) 顯示普通的外星實驗室（含可能的淡出）
+  // 3) 繪製背景：分四個階段
+  //    (A) e[1] 前 => 全部顯示普通實驗室
+  //    (B) e[2] ~ e[7] => 淡入 tranquilizer
+  //    (C) e[8] => 直接顯示 tranquilizer2
+  //    (D) e[9] 之後 => 可以繼續顯示 tranquilizer2，但還有黑屏漸漸疊上來
+
+  if (idx < 2) {
+    // (A) 還沒到 e[2]，只顯示普通實驗室
+    image(alienlabImg, 0, 0);
+  } else if (idx < 8) {
+    // (B) e[2] ~ e[7]：要做淡入 tranquilizer
+    //    - 先顯示普通實驗室 (用 alphaLab)
     push();
     tint(255, alphaLab);
     image(alienlabImg, 0, 0);
     pop();
 
-    // (B) 顯示 tranquilizer 的淡入
+    //    - 再顯示 tranquilizer 圖 (用 alphaTranquil)
     push();
     tint(255, alphaTranquil);
     image(alientranquilizerImg, 0, 0);
     pop();
 
-    // (C) 若正在淡入，就讓 alphaLab 遞減、alphaTranquil 遞增
-    //     遞減/增幅度可自行調整
-    if (isFading && alphaTranquil < 255) {
-      alphaLab    = alphaLab    - 3;  // 寫多少，淡出速度就多快
-      alphaTranquil = alphaTranquil + 3;  
-      if (alphaTranquil >= 255) {
-        alphaTranquil = 255;    // 限制在 0~255
-        alphaLab      = 0;
-        isFading      = false;  // 淡入結束
-      }
-      if (alphaLab < 0) {
-        alphaLab = 0;
+    //    - 如果正在淡入，就讓 alphaLab -= 3、alphaTranquil += 3
+    if (isFadingTranquil) {
+      alphaLab -= 3;
+      alphaTranquil += 3;
+      // 不要超出 0~255
+      if (alphaLab < 0) alphaLab = 0;
+      if (alphaTranquil > 255) {
+        alphaTranquil = 255;
+        isFadingTranquil = false; // 淡入完成，就停止
       }
     }
   } else {
-    // 當 ff >= 8 時，直接顯示 tranquilizer2Img（不需要淡入）
+    // (C) & (D) e[8] ~ 之後
+    //    - 顯示 tranquilizer2Img
     image(alientranquilizer2Img, 0, 0);
   }
 
-  // 4) 顯示欄杆
+  // 4) 此時我們都已經把實驗室/ tranquilizer / tranquilizer2畫出來
+  //    接著顯示籠子欄杆
   image(barsImg, 0, 0);
 
-  // 5) 顯示文字框 + 文字
+  // 5) 最後如果已經到了 e[9] 或之後 (isFadingBlack=true)，就開始黑屏淡入
+  if (isFadingBlack) {
+    alphaBlack += 3;  // 每幀加 3，可以調整速度（越大淡入越快）
+    if (alphaBlack > 255) {
+      alphaBlack = 255; // 最大只能 255
+    }
+
+    // 用半透明黑色蓋住整個畫面
+    push();
+    noStroke();
+    fill(0, alphaBlack);
+    rect(0, 0, width, height);
+    pop();
+  }
+
+  // 6) 顯示文字框
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
 
-  // 若包含 press，提示玩家
-  var prompt = txt.toLowerCase().indexOf("press") !== -1
-               ? "- press z to continue -"
-               : "- click to continue -";
+  // 檢查是否含 press
+  var prompt = "";
+  if (txt.toLowerCase().indexOf("press") !== -1) {
+    prompt = "- press z or x -";
+  } else {
+    prompt = "- click to continue -";
+  }
   text(prompt, 248, 40);
   text(txt, 28, 320, 650);
 }
-
 
 function drawBBScene() {
   push();
