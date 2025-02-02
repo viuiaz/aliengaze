@@ -8,6 +8,8 @@ var alphaTranquil = 0;    // tranquilizer 圖片的透明度
 var isFading = false;     // 是否正在進行淡入
 var alphaBlack = 0;       // 負責黑幕的透明度
 var isFadingBlack = false; // 是否已經開始淡入黑幕
+var nnBgAlpha = 255; // 用來控制 nn 場景的背景淡出 (0~255)
+var mmBgAlpha = 0;   // 用來控制 mm 場景的背景淡入 (0~255)
 
 // 透明度控制（特殊場景用）
 var transparency2 = 255, transparency3 = 0;
@@ -658,68 +660,47 @@ function drawHHScene() {
 }
 
 function drawNNScene() {
-  push();
-  if (transparency7 < 255) transparency7 += 0.4;
-  tint(255, transparency7);
-  image(meerkatreflectionImg, 0, 0);
-  pop();
-
-  // 顯示文字 (nn[nnn])
-  myTextbox.showTextbox(nn[nnn]);
-
-  // 如果走到 nn[16]，開始淡出
+  // 1) 如果還沒淡出，nnBgAlpha = 255；當讀到 nn[16] 時開始遞減
   if (nnn === 16) {
-    isFadingBlack = true;  // 開啟淡出
-  }
-
-  // 執行淡出 (黑幕 alpha 往上加)
-  if (isFadingBlack) {
-    alphaBlack += 5; // 數字越大，淡出越快
-    if (alphaBlack >= 255) {
-      alphaBlack = 255;
-      isFadingBlack = false; // 淡出結束
-
-      // 切換到 scene 22 (mm 陣列第一行)
+    nnBgAlpha -= 5;  // 數字越大，淡出越快
+    if (nnBgAlpha < 0) {
+      nnBgAlpha = 0; 
+      // 淡到全透明後 → 切換到 scene 22
       gameScene = 22;
       mmm = 1;
-
-      // 下個場景要從黑幕淡入
-      isFading = true; 
-      // 注意：此時 alphaBlack 還是 255
+      mmBgAlpha = 0;  // mm 場景一開始是透明
     }
   }
 
-  // 畫黑幕
+  // 2) 用 tint() 控制背景圖片的透明度
   push();
-  noStroke();
-  fill(0, alphaBlack);
-  rect(0, 0, width, height);
+  tint(255, nnBgAlpha);  
+  image(meerkatreflectionImg, 0, 0); // nn 場景的背景
   pop();
+
+  // 3) 顯示文字（不會被 tint 影響）
+  myTextbox.showTextbox(nn[nnn]);
 }
 
 function drawMMScene() {
-  // 背景 (可用 meerkatImg，或你想要的圖)
-  image(meerkatImg, 0, 0);
-
-  // 顯示文字 (mm[mmm])
-  myTextbox.showTextbox(mm[mmm]);
-
-  // 如果正在淡入，就讓 alphaBlack 從 255 -> 0
-  if (isFading) {
-    alphaBlack -= 5; // 數字越大，淡入越快
-    if (alphaBlack <= 0) {
-      alphaBlack = 0;
-      isFading = false;  // 淡入結束
+  // 1) 若 mmBgAlpha 還沒到 255，則遞增製造淡入效果
+  if (mmBgAlpha < 255) {
+    mmBgAlpha += 5; // 數字越大，淡入越快
+    if (mmBgAlpha > 255) {
+      mmBgAlpha = 255; 
     }
   }
 
-  // 繪製黑幕
+  // 2) 用 tint(255, mmBgAlpha) 顯示 mm 場景的背景圖片
   push();
-  noStroke();
-  fill(0, alphaBlack);
-  rect(0, 0, width, height);
+  tint(255, mmBgAlpha);
+  image(meerkatImg, 0, 0);  // mm 場景的背景
   pop();
+
+  // 3) 顯示文字（不會被 tint 影響）
+  myTextbox.showTextbox(mm[mmm]);
 }
+
 
 //------------------------------
 // 初始場景繪製（gameScene 0 使用）
