@@ -42,8 +42,8 @@ var decisionMap = {
   5: { z: 6, x: 6 },      // h[5] in scene 5
 //  6: { z: 7, x: 7 },      // j[3] in scene 6
   7: { z: 8, x: 9 },      // k[6] in scene 7
-  8: { z: 10, x: 9 },      // l[3] in scene 8
-  9: { z: 10, x: 10 },    // q[6] in scene 9
+//  8: { z: 10, x: 9 },      // l[3] in scene 8
+//  9: { z: 10, x: 10 },    // q[6] in scene 9
   10: { z: 11, x: 11 },   // w[5] in scene 10
   11: { z: 12, x: 12 },   // e[11] in scene 11
   12: { z: 13, x: 14 },   // bb[22] in scene 12
@@ -66,7 +66,8 @@ var transitions = {
   3: { z: 4, x: 4 },
   5: { z: 6, x: 6 },
   6: { z: 7, x: 7 },
- // 8: { z: 10, x: 10 },
+  8: { z: 10, x: 10 },
+  9: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
   13: { z: 15, x: 15 },
@@ -157,14 +158,14 @@ function setup() {
 
   l[1] = "'Ahhhhhhh!'";
   l[2] = "'Stop staring! Let me out!'";
-  l[3] = "press [z] to rest in the corner";
+  l[3] = "I curled up in the corner.";
 
   q[1] = "I started to walk around...";
   q[2] = "I felt that this helped to alleviate some of my anxiety.";
   q[3] = "...";
   q[4] = "One of them frowned a little, but still... nothing happens.";
   q[5] = "I'm starting to feel a little tired.";
-  q[6] = "press [z] to rest in the corner";
+  q[6] = "I sighed and sank into the corner.";
 
   w[1] = "Now it's just me... and them.";
   w[2] = "Again.";
