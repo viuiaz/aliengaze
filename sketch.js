@@ -299,7 +299,7 @@ function setup() {
 mm[1] = "......";
 mm[2] = "So, I’m just a meerkat.";
 mm[3] = "That’s why my last memory was of sand... of a burrow.";
-mm[4] = "The warmth I thought was the sun… it was a heat lamp.";
+mm[4] = "The warmth I thought was the sun, it was a heat lamp.";
 mm[5] = "The eyes watching me weren’t aliens...";
 mm[6] = "I almost believed it.";
 mm[7] = "That I was something more.";
@@ -716,7 +716,7 @@ function draw() {
         background(0);
         fill(255);
         textSize(30);
-        text("End", width/2 - 30, height/2);
+        text("end", width/2 - 30, height/2);
         break;
     }
   }
