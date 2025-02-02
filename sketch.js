@@ -488,6 +488,31 @@ function drawSceneWithBars(textContent, bgImg) {
   text(textContent, 28, 320, 650);
 }
 
+function drawSSScene() {
+  var idx = sss;  // 取得 ss 陣列的索引
+  var txt = ss[idx]; // 目前要顯示的對話內容
+
+  // 1. 顯示背景 (withoutalienlabImg)
+  image(withoutalienlabImg, 0, 0);
+
+  // 2. 如果對話還沒到 `ss[4]`，顯示柵欄
+  if (idx <= 3) {
+    image(barsImg, 0, 0);
+  }
+
+  // 3. 顯示文字框與文字
+  myTextbox.showTextbox();
+  fill(255);
+  textSize(14);
+
+  // 按鍵提示（如果有必要）
+  var prompt = txt.toLowerCase().indexOf("press") !== -1
+               ? "- press z to continue -"
+               : "- click to continue -";
+  text(prompt, 248, 40);
+  text(txt, 28, 320, 650);
+}
+
 function drawDialogueWithBars(bgImg) {
   if (bgImg) {
     image(bgImg, 0, 0);
@@ -673,7 +698,8 @@ function draw() {
       case 10: drawSceneWithBars(w[dd], alienlabImg); break;
       case 11: drawTranquilizerScene(); break;
       case 12: drawBBScene(); break;
-      case 13: drawScene(ss[sss], withoutalienlabImg); break;
+//      case 13: drawScene(ss[sss], withoutalienlabImg); break;
+      case 13: drawSSScene(); break;
       case 14: drawSceneWithBars(ii[iii], withoutalienlabImg); break;
       case 15: drawScene(oo[ooo], ruin2Img); break;
       case 16: drawScene(cc[ccc], ruinImg); break;
