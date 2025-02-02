@@ -118,16 +118,16 @@ function setup() {
   s[3] = "What is happening?";
   s[4] = "Where am I? What are they?";
   s[5] = "Are those... aliens?";
-  s[6] = "...";
+  s[6] = "No, that can't be... right?";
   s[7] = "... Am I dreaming?";
   s[8] = "What are they doing? Are they looking at me?";
   s[9] = "Wait. Why am I behind the bars? Am I in a cage?";
-  s[10] = "... What should I do?";
+  s[10] = "No, no... This isn't right. I need to think.";
   s[11] = "press [z] to try to talk to the aliens / press [x] to observe silently";
 
   a[1] = "'Hey! What do you want?'";
-  a[2] = "...";
-  a[3] = "They just keep staring at me without saying anything...";
+  a[2] = "They watch me—unblinking, unmoving.";
+  a[3] = "Like I'm some kind of experiment.";
   a[4] = "I sat in the corner, trying to figure out what they might do next.";
 
   d[1] = "I'll just wait and see what's going to happen.";
@@ -164,8 +164,8 @@ function setup() {
 
   q[1] = "I started to walk around...";
   q[2] = "I felt that this helped to alleviate some of my anxiety.";
-  q[3] = "...";
-  q[4] = "One of them frowned a little, but still... nothing happens.";
+  q[3] = "One of them frowned, just slightly...";
+  q[4] = "A hint of... something? Concern? Amusement?"";
   q[5] = "I'm starting to feel a little tired.";
   q[6] = "I sighed and sank into the corner.";
 
@@ -173,12 +173,12 @@ function setup() {
   w[2] = "Again.";
   w[3] = "What should I do?";
   w[4] = "I've had enough of waiting.";
-  w[5] = "press [z] to hit the wall with my head / press [x] to crazy pluck my hair";
+  w[5] = "press [z] to slam my head against the wall / press [x] to claw at my scalp, rip away the panic"
 
-  e[1] = "... Hurting myself actually feels good.. haha...";
+  e[1] = "Pain... is the only thing that still feels real.";
   e[2] = "... Wait! It's coming towards me!";
   e[3] = "What is it going to do?";
-  e[4] = "... Is that a... syringe?";
+  e[4] = "... Is that a syringe?";
   e[5] = "I plead, 'Stop! Please don't hurt me!'";
   e[6] = "I keep yelling, yet it just keep getting closer...";
   e[7] = "...!";
@@ -208,7 +208,7 @@ function setup() {
   bb[19] = "That spot is exactly where it standed...";
   bb[20] = "It's funny I am sympathized with by an alien.";
   bb[21] = "What should I do?";
-  bb[22] = "press [z] to use the key / press [x] to stay as a sitting duck";
+  bb[22] = "press [z] to take the key and risk everything / press [x] to stay—maybe this is safer...";
 
   ss[1] = "This will be my only chance.";
   ss[2] = "I squatted down and grabbed the key.";
@@ -218,7 +218,6 @@ function setup() {
   ss[6] = "I don't even know what to feel after these uncountable days...";
   ss[7] = "...";
   ss[8] = "I ran out immediately without a second thought.";
-//  ss[9] = "press [z] to get out";
 
   ii[1] = "I don't believe I'll have the chance to get out...";
   ii[2] = "Maybe staying here is the best option.";
@@ -231,13 +230,11 @@ function setup() {
   ii[9] = "I trust my decision...?";
   ii[10] = "Really?";
   ii[11] = "Of course not! I have to get out!";
-//  ii[12] = "press [z] to escape";
 
   oo[1] = "...";
   oo[2] = "...What in the world?";
   oo[3] = "What happened?";
   oo[4] = "It doesn't look like the place I've been before...";
-//  oo[5] = "press [x] to look around";
 
   cc[1] = "...";
   cc[2] = "What is wrong with the world?";
@@ -247,7 +244,6 @@ function setup() {
   cc[6] = "...";
   cc[7] = "Can anyone help...";
   cc[8] = "......";
-//  cc[9] = "press [z] to try and survive";
 
   jj[1] = "I'll try...";
   jj[2] = "I finally got out! I have to at least try.";
@@ -263,7 +259,6 @@ function setup() {
   jj[12] = "...";
   jj[13] = "*footstep sounds*";
   jj[14] = "What...?";
-//  jj[15] = "press [z] to open my eyes";
 
   kk[1] = "...Haha.";
   kk[2] = "It's them again.";
@@ -333,7 +328,7 @@ function setup() {
  mm[19] = "Oh, why are you still here?";
  mm[20] = "You can't do anything for me.";
  mm[21] = "So, please...";
- mm[22] = "Just leave me alone.";
+ mm[22] = "Just leave. Like everyone else did.";
 
 
   myTextbox = new Textbox();
