@@ -13,7 +13,7 @@ var isFadingBlack = false; // 是否已經開始淡入黑幕
 var transparency2 = 255, transparency3 = 0;
 var transparency4 = 255, transparency5 = 0, transparency6 = 255, transparency7 = 0;
 
-// 圖片資源
+// 圖片
 var startImg, alienlabImg, barsImg, withoutalienlabImg;
 var aliencrowd1Img, aliencrowdImg, alientranquilizerImg, alientranquilizer2Img;
 var ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
@@ -21,7 +21,7 @@ var ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 var SuperLegendBoy;
 
-// 對話陣列（完全保留原始內容）
+// 對話陣列
 var s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
@@ -40,21 +40,10 @@ var decisionMap = {
 //  2: { z: 3, x: 3 },      // d[2] in scene 2
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
-//  6: { z: 7, x: 7 },      // j[3] in scene 6
   7: { z: 8, x: 9 },      // k[6] in scene 7
-//  8: { z: 10, x: 9 },      // l[3] in scene 8
-//  9: { z: 10, x: 10 },    // q[6] in scene 9
   10: { z: 11, x: 11 },   // w[5] in scene 10
   11: { z: 12, x: 12 },   // e[11] in scene 11
   12: { z: 13, x: 14 },   // bb[22] in scene 12
-//  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
-//  14: { z: 15, x: 15 },   // ii[12] in scene 14
-//  15: { z: 16, x: 16 },   // oo[5] in scene 15
-//  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
-//  17: { z: 18, x: 18 },   // jj[15] in scene 17
-//  18: { z: 19, x: 19 },   // kk[8] in scene 18
-//  19: { z: 20, x: 20 },   // vv[8] in scene 19
-//  21: { z: 22, x: 22 }    // nn[16] in scene 21
 };
 
 //------------------------------
@@ -307,28 +296,36 @@ function setup() {
   nn[15] = "......";
   nn[16] = "I took a deep breath.";
 
-  mm[1] = "....";
-  mm[2] = "So, I am just a meerkat...";
-  mm[3] = "That's why my last memory is in a dessert...";
-  mm[4] = "... Haha.";
-  mm[5] = "How funny is this.";
-  mm[6] = "Even if it was just a dream...";
-  mm[7] = "I am still being trapped and caged in real life.";
-  mm[8] = "And how did I even dream of being human?";
-  mm[9] = "How dare I?";
-  mm[10] = "They are the one that put me here, and caged me forever...";
-  mm[11] = "The thought of becoming one of them is disgusting.";
-  mm[12] = "Will I plan on escaping just like in the dream?";
-  mm[13] = "Well.";
-  mm[14] = "I am just a meerkat.";
- mm[15] = "What can I do?";
- mm[16] = ".";
- mm[17] = ".";
- mm[18] = ".";
- mm[19] = "Oh, why are you still here?";
- mm[20] = "You can't do anything for me.";
- mm[21] = "So, please...";
- mm[22] = "Just leave. Like everyone else did.";
+mm[1] = "......";
+mm[2] = "So, I’m just a meerkat.";
+mm[3] = "That’s why my last memory was of sand... of a burrow.";
+mm[4] = "The warmth I thought was the sun… it was a heat lamp.";
+mm[5] = "The eyes watching me weren’t aliens...";
+mm[6] = "I almost believed it.";
+mm[7] = "That I was something more.";
+mm[8] = "That I could escape.";
+mm[9] = "How foolish of me.";
+mm[10] = "I was never a prisoner of aliens.";
+mm[11] = "I was never a test subject.";
+mm[12] = "I was just an exhibit...";
+mm[13] = "A curiosity behind glass.";
+mm[14] = "They put me here.";
+mm[15] = "They caged me.";
+mm[16] = "And I dreamt of being one of them?";
+mm[17] = "How disgusting.";
+mm[18] = "How pathetic.";
+mm[19] = "What was I hoping for?";
+mm[20] = "A miracle? A rescue?";
+mm[21] = "Meerkats don’t get happy endings.";
+mm[22] = "We just get watched.";
+mm[23] = "Until the day we stop moving."
+mm[24] = ".";
+mm[25] = ".";
+mm[26] = ".";
+mm[27] = "Oh, why are you still here?";
+mm[28] = "You can't do anything for me.";
+mm[29] = "So, please...";
+mm[30] = "Just leave. Like everyone else did.";
 
 
   myTextbox = new Textbox();
