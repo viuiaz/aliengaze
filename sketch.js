@@ -40,7 +40,7 @@ var decisionMap = {
 //  2: { z: 3, x: 3 },      // d[2] in scene 2
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
-  6: { z: 7, x: 7 },      // j[3] in scene 6
+//  6: { z: 7, x: 7 },      // j[3] in scene 6
   7: { z: 8, x: 9 },      // k[6] in scene 7
   8: { z: 10, x: 9 },      // l[3] in scene 8
   9: { z: 10, x: 10 },    // q[6] in scene 9
@@ -65,6 +65,7 @@ var transitions = {
   2: { z: 3, x: 3 },
   3: { z: 4, x: 4 },
   5: { z: 6, x: 6 },
+  6: { z: 7, x: 7 },
  // 8: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
@@ -141,11 +142,11 @@ function setup() {
   h[2] = "*footstep sounds*";
   h[3] = "...";
   h[4] = "They are back! I don't know what they will do to me...";
-  h[5] = "press [z] to cower in the corner";
+  h[5] = "The sound of footsteps grew louder. I shrank into the corner, my heart pounding.";
 
   j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
-  j[2] = "...What are they even saying? Please speak English!";
-  j[3] = "press [z] to listen carefully";
+  j[2] = "...What are they even saying?";
+  j[3] = "I leaned in, trying to make sense of their strange words.";
 
   k[1] = "When I got closer, they stopped talking.";
   k[2] = "...";
