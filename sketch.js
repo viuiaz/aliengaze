@@ -53,7 +53,7 @@ var decisionMap = {
 //  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
 //  17: { z: 18, x: 18 },   // jj[15] in scene 17
 //  18: { z: 19, x: 19 },   // kk[8] in scene 18
-  19: { z: 20, x: 20 },   // vv[8] in scene 19
+//  19: { z: 20, x: 20 },   // vv[8] in scene 19
   21: { z: 22, x: 22 }    // nn[16] in scene 21
 };
 
@@ -279,8 +279,8 @@ function setup() {
   vv[4] = "How can just staring at me make any difference to them?";
   vv[5] = "At first, I thought they are going to do tests on me.";
   vv[6] = "But it turns out they just love to stare at me.";
-  vv[7] = "...";
-  vv[8] = "press [z] to sit in the corner";
+  vv[7] = "There was no escape.";
+  vv[8] = "I sank into the corner, trapped in their gaze.";
 
   hh[1] = "I guess I'll just be in this cage for the rest of my life...";
   hh[2] = "It's still better than the outside world, right?";
@@ -292,7 +292,7 @@ function setup() {
   hh[8] = "...";
   hh[9] = "Wait... trying to remember all the details hurts my head.";
   hh[10] = "Ugh...";
-  hh[11] = "press [z] to crouch down";
+  hh[11] = "I crouched down, holding my head.";
 
   nn[1] = ".";
   nn[2] = "..";
