@@ -36,7 +36,7 @@ var decisionMap = {
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
   6: { z: 7, x: 7 },      // j[3] in scene 6
-  7: { z: 8, x: 9 },      // k[6] in scene 7
+  7: { z: 10, x: 9 },      // k[6] in scene 7
   8: { z: 9, x: 9 },      // l[3] in scene 8
   9: { z: 10, x: 10 },    // q[6] in scene 9
   10: { z: 11, x: 11 },   // w[5] in scene 10
