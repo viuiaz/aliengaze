@@ -6,6 +6,8 @@ var gameScene = 0;      // 正式遊戲中的場景編號
 var alphaLab = 255;       // 普通實驗室的透明度
 var alphaTranquil = 0;    // tranquilizer 圖片的透明度
 var isFading = false;     // 是否正在進行淡入
+var alphaBlack = 0;       // 負責黑幕的透明度
+var isFadingBlack = false; // 是否已經開始淡入黑幕
 
 // 透明度控制（特殊場景用）
 var transparency2 = 255, transparency3 = 0;
@@ -511,71 +513,74 @@ function drawDialogueWithBars(bgImg) {
 //------------------------------
 function drawTranquilizerScene() {
   // 1) 判斷目前對話行數 ff
-  var idx = ff;         // e 陣列走到第幾行
-  var txt = e[idx];     // 目前要顯示的文字內容（比如 e[2] ... e[8]）
-  
+  var idx = ff;         
+  var txt = e[idx] || "";
+
   // 2) 根據對話行數，決定是否要啟動淡入
-  if (idx === 2) {      
-    // 當對話走到 e[2] 時，設定 isFading = true，開始做淡入
+  if (idx === 2) {
+    // (原本) e[2] 時，開始淡入 tranquilizerImg
     isFading = true;
   }
-  if (idx >= 8) {
-    // 當對話走到 e[8]，就可以直接顯示 alientranquilizer2Img
-    // 不需要淡入，把 tranquilizer2 圖顯示出來就好
-    // 後面會有具體繪圖的寫法
-  }
 
-  // 3) 畫面背景：用 push/pop 來做 tint，不互相干擾
-  //    - 若 ff < 8，就繼續顯示「普通實驗室」+「淡入 tranquilizer 圖」 
-  //    - 若 ff >= 8，就改成顯示 tranquilizer2Img
+  // ----------- 新增：當對話到 e[9] 時，開始淡入黑幕 -----------
+  if (idx >= 9) {
+    isFadingBlack = true;
+  }
+  // -----------------------------------------------------------
+
+  // 3) 畫面背景：若 ff < 8，顯示普通實驗室 + tranquilizer 淡入；若 ff >= 8，顯示 tranquilizer2
   if (idx < 8) {
-    // (A) 顯示普通的外星實驗室（含可能的淡出）
     push();
     tint(255, alphaLab);
     image(alienlabImg, 0, 0);
     pop();
 
-    // (B) 顯示 tranquilizer 的淡入
     push();
     tint(255, alphaTranquil);
     image(alientranquilizerImg, 0, 0);
     pop();
 
-    // (C) 若正在淡入，就讓 alphaLab 遞減、alphaTranquil 遞增
-    //     遞減/增幅度可自行調整
     if (isFading && alphaTranquil < 255) {
-      alphaLab    = alphaLab    - 3;  // 寫多少，淡出速度就多快
-      alphaTranquil = alphaTranquil + 3;  
+      alphaLab    -= 3;
+      alphaTranquil += 3;
       if (alphaTranquil >= 255) {
-        alphaTranquil = 255;    // 限制在 0~255
+        alphaTranquil = 255;
         alphaLab      = 0;
-        isFading      = false;  // 淡入結束
+        isFading      = false;
       }
       if (alphaLab < 0) {
         alphaLab = 0;
       }
     }
   } else {
-    // 當 ff >= 8 時，直接顯示 tranquilizer2Img（不需要淡入）
     image(alientranquilizer2Img, 0, 0);
   }
 
-  // 4) 顯示欄杆
-  image(barsImg, 0, 0);
+  // ----------- 新增：在這裡做黑幕淡入 (蓋在背景之上，但在欄杆和文字框之下) -----------
+  if (isFadingBlack) {
+    alphaBlack += 3;   // 每幀 +3，越大越快
+    if (alphaBlack > 255) {
+      alphaBlack = 255;
+    }
+    push();
+    noStroke();
+    fill(0, alphaBlack);
+    rect(0, 0, width, height); // 在整個畫面蓋上半透明黑色
+    pop();
+  }
+  // -----------------------------------------------------------
 
-  // 5) 顯示文字框 + 文字
+  // 4) 顯示文字框 + 文字
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
 
-  // 若包含 press，提示玩家
-  var prompt = txt.toLowerCase().indexOf("press") !== -1
+  var prompt = (txt.toLowerCase().indexOf("press") !== -1)
                ? "- press z to continue -"
                : "- click to continue -";
   text(prompt, 248, 40);
   text(txt, 28, 320, 650);
 }
-
 
 function drawBBScene() {
   push();
