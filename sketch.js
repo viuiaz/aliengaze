@@ -606,7 +606,7 @@ function draw() {
       case 16: drawScene(cc[ccc], ruinImg); break;
       case 17: drawJJScene(); break;
       case 18: drawKKScene(); break;
-      case 19: drawScene(vv[vvv], aliencrowdImg); break;
+      case 19: drawSceneWithBars(vv[vvv], aliencrowdImg); break;
       case 20: drawHHScene(); break;
       case 21: drawNNScene(); break;
       case 22: drawScene(mm[mmm], meerkatImg); break;
