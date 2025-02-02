@@ -372,7 +372,7 @@ class Textbox {
     textLeading(16);
     textAlign(LEFT, TOP);
 
-    let textPaddingX = 85;  // ★ 進一步調整 Padding，讓左邊間距更自然
+    let textPaddingX = 28;  // ★ 進一步調整 Padding，讓左邊間距更自然
     let textPaddingY = 18;  // ★ 讓文字稍微往下，避免太貼近頂部
 
     text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
