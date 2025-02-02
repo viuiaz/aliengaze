@@ -1,6 +1,6 @@
-//-------------------------------------
+//------------------------------
 // 0. 全域變數
-//-------------------------------------
+//------------------------------
 var sceneNumber = 0;    // 0 = 封面, 1 = 正式遊戲
 var gameScene = 0;      // 正式遊戲中的場景編號
 
@@ -22,7 +22,7 @@ var s = [], a = [], d = [], f = [], g = [], h = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 各場景對話索引（從 1 開始），請用 var 以便 window[...] 正確取值
+// 各場景對話索引（從 1 開始），必須用 var 以便 window[...] 正確存取
 var i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
@@ -32,7 +32,7 @@ var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 //------------------------------
 var decisionMap = {
   0: { z: 1, x: 2 },      // s[11] in scene 0
-  2: { z: 3, x: 3 },      // d[2] in scene 2
+  2: { z: 3, x: 3 },      // d[2] in scene 2 (單一分支：均→ scene 3)
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
   6: { z: 7, x: 7 },      // j[3] in scene 6
@@ -50,10 +50,11 @@ var decisionMap = {
   18: { z: 19, x: 19 },   // kk[8] in scene 18
   19: { z: 20, x: 20 },   // vv[8] in scene 19
   21: { z: 22, x: 22 }    // nn[16] in scene 21
+  // 其他場景無決策需求
 };
 
 //------------------------------
-// 轉場設定（非決策場景中，對話讀完後自動切換；左右結果相同）
+// 轉場設定（非決策場景中，對話讀完後自動切換，左右結果相同）
 //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
@@ -98,8 +99,11 @@ function preload() {
 function setup() {
   createCanvas(700, 394);
   textFont(SuperLegendBoy);
+  textWrap(WORD);
+  textLeading(18);
   background(0);
-  // 其他對話內容初始化請依原始代碼 (以下僅保留部分示範)
+
+  // 初始化對話內容（完全保留原始文本，僅將提示鍵改為 z 與 x）
   s[1] = "...";
   s[2] = "... What?";
   s[3] = "What is happening?";
@@ -111,61 +115,62 @@ function setup() {
   s[9] = "Wait. Why am I behind the bars? Am I in a cage?";
   s[10] = "... What should I do?";
   s[11] = "press [z] to try to talk to the aliens / press [x] to observe silently";
-  
+
   a[1] = "'Hey! What do you want?'";
   a[2] = "...";
   a[3] = "They just keep staring at me without saying anything.";
   a[4] = "press [z] to sit in the corner and observe";
-  
+
   d[1] = "I'll just wait and see what's going to happen.";
   d[2] = "press [z] to sit in the corner and observe";
-  
+
   g[1] = "After hours of waiting, I fell asleep.";
   g[2] = "press [z] to wake up";
-  
+
   f[1] = "!";
   f[2] = "Oh! No one's here now.";
   f[3] = "What should I do?";
   f[4] = "press [z] to crash the bars / press [x] to squeeze through the bars";
-  
+
   h[1] = "Ahhh... It hurts... Maybe I should stop.";
   h[2] = "*footstep sounds*";
   h[3] = "...";
   h[4] = "They are back! I don't know what they will do to me...";
   h[5] = "press [z] to cower in the corner";
-  
+
   j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
   j[2] = "...What are they even saying? Please speak English!";
   j[3] = "press [z] to listen carefully";
-  
+
   k[1] = "When I got closer, they stopped talking.";
   k[2] = "...";
   k[3] = "And how many aliens are there?";
   k[4] = "What did I do to deserve this?";
   k[5] = "What should I do?";
   k[6] = "press [z] to scream / press [x] to pace around";
-  
+
   l[1] = "'Ahhhhhhh!'";
   l[2] = "'Stop staring! Let me out!'";
   l[3] = "press [z] to rest in the corner";
-  
+
   q[1] = "I started to walk around...";
   q[2] = "I felt that this helped to alleviate some of my anxiety.";
   q[3] = "...";
   q[4] = "One of them frowned a little, but still... nothing happens.";
   q[5] = "I'm starting to feel a little tired.";
   q[6] = "press [z] to rest in the corner";
-  
+
   w[1] = "Now it's just me... and them.";
   w[2] = "Again.";
   w[3] = "What should I do?";
   w[4] = "I've had enough of waiting.";
   w[5] = "press [z] to hit the wall with my head / press [x] to crazy pluck my hair";
-  
+
   e[1] = "... Hurting myself actually feels good.. haha...";
   e[2] = "... Wait! It's coming towards me!";
   e[3] = "What is it going to do?";
   e[4] = "... Is that a... syringe?";
+  // 將原本 e[5] 的提示刪除，改為純文字
   e[5] = "I plead, 'Stop! Please don't hurt me!'";
   e[6] = "I keep yelling, yet it just keep getting closer...";
   e[7] = "...!";
@@ -173,7 +178,7 @@ function setup() {
   e[9] = "... Getting... sleepy... again.";
   e[10] = "...";
   e[11] = "press [z] to wake up";
-  
+
   bb[1] = "I don't know how long I slept...";
   bb[2] = "But it seems like no one's around.";
   bb[3] = "I still have no idea why I am here.";
@@ -196,7 +201,7 @@ function setup() {
   bb[20] = "It's funny I am sympathized with by an alien.";
   bb[21] = "What should I do?";
   bb[22] = "press [z] to use the key / press [x] to stay as a sitting duck";
-  
+
   ss[1] = "This will be my only chance.";
   ss[2] = "I squatted down and grabbed the key.";
   ss[3] = "... It took some time to unlock the lock from the inside.";
@@ -206,7 +211,7 @@ function setup() {
   ss[7] = "...";
   ss[8] = "I ran out immediately without a second thought.";
   ss[9] = "press [z] to get out";
-  
+
   ii[1] = "I don't believe I'll have the chance to get out...";
   ii[2] = "Maybe staying here is the best option.";
   ii[3] = "I still have food...";
@@ -219,13 +224,13 @@ function setup() {
   ii[10] = "Really?";
   ii[11] = "Of course not! I have to get out!";
   ii[12] = "press [z] to escape";
-  
+
   oo[1] = "...";
   oo[2] = "...What in the world?";
   oo[3] = "What happened?";
   oo[4] = "It doesn't look like the place I've been before...";
   oo[5] = "press [x] to look around";
-  
+
   cc[1] = "...";
   cc[2] = "What is wrong with the world?";
   cc[3] = "Why does everything just look like ruins?";
@@ -235,7 +240,7 @@ function setup() {
   cc[7] = "Can anyone help...";
   cc[8] = "......";
   cc[9] = "press [z] to try and survive";
-  
+
   jj[1] = "I'll try...";
   jj[2] = "I finally got out! I have to at least try.";
   jj[3] = "Why is it really nothing?";
@@ -251,7 +256,7 @@ function setup() {
   jj[13] = "*footstep sounds*";
   jj[14] = "What...?";
   jj[15] = "press [z] to open my eyes";
-  
+
   kk[1] = "...Haha.";
   kk[2] = "It's them again.";
   kk[3] = "'Gni&pacsep@otS!.uoy*eucse2r^ot#ereh1era3ew'";
@@ -260,7 +265,7 @@ function setup() {
   kk[6] = "Maybe this is the only way to survive now...";
   kk[7] = "Is it better to be imprisoned than to starve?";
   kk[8] = "press [z] to close my eyes and let them abduct me again";
-  
+
   vv[1] = "...";
   vv[2] = "Of course... Here they are.";
   vv[3] = "I still have no idea what they want from me.";
@@ -269,7 +274,7 @@ function setup() {
   vv[6] = "But it turns out they just love to stare at me.";
   vv[7] = "...";
   vv[8] = "press [z] to sit in the corner";
-  
+
   hh[1] = "I guess I'll just be in this cage for the rest of my life...";
   hh[2] = "It's still better than the outside world, right?";
   hh[3] = "I wonder what happened to the rest of the world.";
@@ -281,7 +286,7 @@ function setup() {
   hh[9] = "Wait... trying to remember all the details hurts my head.";
   hh[10] = "Ugh...";
   hh[11] = "press [z] to crouch down";
-  
+
   nn[1] = ".";
   nn[2] = "..";
   nn[3] = "...";
@@ -298,7 +303,7 @@ function setup() {
   nn[14] = "Is that me?";
   nn[15] = "......";
   nn[16] = "press [z] to face the reality";
-  
+
   mm[1] = "....";
   mm[2] = "So, I am just a meerkat...?";
   mm[3] = "That's why my last memory is in a dessert...";
@@ -330,9 +335,47 @@ function setup() {
   myTextbox = new Textbox();
 }
 
-// ==============================
-// 輸入處理（保留原始）
-// ==============================
+//------------------------------
+// 場景切換時重置索引函式
+//------------------------------
+function resetSceneIndexes(newScene) {
+  var resetMap = {
+    1: ['u'], 2: ['y'], 3: ['ee'], 4: ['r'],
+    5: ['t'], 6: ['qq'], 7: ['aa'], 8: ['b'],
+    9: ['c'], 10: ['dd'], 11: ['ff'], 12: ['gg'],
+    13: ['sss'], 14: ['iii'], 15: ['ooo'], 16: ['ccc'],
+    17: ['jjj'], 18: ['kkk'], 19: ['vvv'], 20: ['hhh'],
+    21: ['nnn'], 22: ['mmm']
+  };
+  if (resetMap[newScene]) {
+    resetMap[newScene].forEach(function(varName) {
+      window[varName] = 1;
+    });
+  }
+}
+
+//------------------------------
+// 文字框類別
+//------------------------------
+class Textbox {
+  showTextbox() {
+    stroke(255);
+    fill(0);
+    // 調整文字框高度為 70
+    rect(15, 330, 680, 70);
+    noStroke();
+    fill(255);
+    textSize(14);
+    textWrap(WORD);
+    textLeading(18);
+    textAlign(LEFT, TOP);
+  }
+}
+
+//------------------------------
+// 輸入處理
+//------------------------------
+// 封面狀態：僅接受空白鍵啟動
 function keyPressed() {
   if (sceneNumber === 0) {
     if (key === ' ') {
@@ -345,7 +388,8 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
+    // 僅當目前行為決策提示且為最後一行時，才接受鍵盤輸入
+    if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
           gameScene = decisionMap[gameScene][key.toLowerCase()];
@@ -359,14 +403,16 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  if (sceneNumber === 0) return;
+  if (sceneNumber === 0) return; // 封面忽略鼠標點擊
   if (sceneNumber === 1) {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
+    // 若當前行包含 "press" 且為最後一行，則不接受鼠標點擊（等待鍵盤輸入）
+    if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
       return;
     }
+    // 只在當前索引小於 (陣列長度 - 1) 時推進，以免跳過決策提示
     if (idx < mapping.arr.length - 1) {
       advanceCurrentIndex();
     } else {
@@ -384,9 +430,9 @@ function advanceCurrentIndex() {
   window[idxVar]++;
 }
 
-// ==============================
-// 對話映射：指定每個 gameScene 使用哪個對話陣列及其索引變數名稱
-// ==============================
+//------------------------------
+// 對話映射：指定每個 gameScene 使用哪個對話陣列及其專用索引變數名稱
+//------------------------------
 var dialogueMapping = {
   0: { arr: s, idxVar: 'i' },
   1: { arr: a, idxVar: 'u' },
@@ -413,20 +459,21 @@ var dialogueMapping = {
   22: { arr: mm, idxVar: 'mmm' }
 };
 
-// ==============================
-// 繪製函式：只修改對話匡與文字位置（click to continue 不變）
-// ==============================
+//------------------------------
+// 通用場景繪製函式（用於非特殊場景）
+//------------------------------
 function drawScene(textContent, bgImg) {
   if (bgImg) image(bgImg, 0, 0);
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  // "- click to continue -" 保持不變，這裡照原始放在上方
   text("- click to continue -", 248, 40);
-  // 將對話文字移至對話匡內較下方，這裡設在 y=380
-  text(textContent, 28, 380);
+  text(textContent, 28, 350);
 }
 
+//------------------------------
+// 帶欄杆背景的繪製函式（適用於需要顯示牢籠欄杆的場景）
+//------------------------------
 function drawSceneWithBars(textContent, bgImg) {
   if (bgImg) {
     image(bgImg, 0, 0);
@@ -436,7 +483,7 @@ function drawSceneWithBars(textContent, bgImg) {
   fill(255);
   textSize(14);
   text("- click to continue -", 248, 40);
-  text(textContent, 28, 380);
+  text(textContent, 28, 350);
 }
 
 function drawDialogueWithBars(bgImg) {
@@ -450,18 +497,27 @@ function drawDialogueWithBars(bgImg) {
   var mapping = dialogueMapping[gameScene];
   var idx = window[mapping.idxVar];
   var currentText = mapping.arr[idx] || "";
-  var prompt = (currentText.toLowerCase().indexOf("press") !== -1) ?
-      "- press z or x to choose -" : "- click to continue -";
+  var prompt = "";
+  if (currentText.toLowerCase().indexOf("press") !== -1) {
+    prompt = "- press z or x to choose -";
+  } else {
+    prompt = "- click to continue -";
+  }
   text(prompt, 248, 40);
-  text(currentText, 28, 380);
+  text(currentText, 28, 350);
 }
 
+//------------------------------
+// 特殊場景繪製函式（帶透明度效果）
+//------------------------------
 function drawTranquilizerScene() {
   push();
+  // 只有當 e 的對話進度大於 8（即 e[9] 之後）時開始降低透明度
   if (ff > 8 && transparency2 > 0) {
     transparency2 -= 0.9;
   }
   tint(255, transparency2);
+  // 注射場景背景在牢籠內，疊加 barsImg
   image(alientranquilizerImg, 0, 0);
   image(barsImg, 0, 0);
   pop();
@@ -515,10 +571,17 @@ function drawNNScene() {
   drawScene(nn[nnn], null);
 }
 
+//------------------------------
+// 初始場景繪製（gameScene 0 使用）
+//------------------------------
 function drawBaseScene() {
+  // 初始場景也在牢籠中，故使用帶欄杆的對話呈現
   drawDialogueWithBars(alienlabImg);
 }
 
+//------------------------------
+// 主循環
+//------------------------------
 function draw() {
   background(0);
   if (sceneNumber === 0) {
@@ -531,15 +594,15 @@ function draw() {
   } else if (sceneNumber === 1) {
     switch (gameScene) {
       case 0: drawBaseScene(); break;
-      case 1: drawSceneWithBars(a[u], alienlabImg); break;
-      case 2: drawSceneWithBars(d[y], alienlabImg); break;
+      case 1: drawScene(a[u], alienlabImg); break;
+      case 2: drawScene(d[y], alienlabImg); break;
       case 3: drawScene(g[ee], null); break;
       case 4: drawSceneWithBars(f[r], withoutalienlabImg); break;
       case 5: drawSceneWithBars(h[t], withoutalienlabImg); break;
-      case 6: drawSceneWithBars(j[qq], aliencrowd1Img); break;
-      case 7: drawSceneWithBars(k[aa], aliencrowdImg); break;
-      case 8: drawSceneWithBars(l[b], aliencrowdImg); break;
-      case 9: drawSceneWithBars(q[c], aliencrowdImg); break;
+      case 6: drawScene(j[qq], aliencrowd1Img); break;
+      case 7: drawScene(k[aa], aliencrowdImg); break;
+      case 8: drawScene(l[b], aliencrowdImg); break;
+      case 9: drawScene(q[c], aliencrowdImg); break;
       case 10: drawSceneWithBars(w[dd], alienlabImg); break;
       case 11: drawTranquilizerScene(); break;
       case 12: drawBBScene(); break;
