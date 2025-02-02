@@ -357,11 +357,11 @@ function resetSceneIndexes(newScene) {
 // 文字框類別
 //------------------------------
 class Textbox {
-  showTextbox(textContent = "") {  // 預設值改成空字串
+  showTextbox(textContent = "") {
     stroke(255);
     fill(0);
 
-    let boxWidth = 650;  // 對話框長度
+    let boxWidth = 680;  // ★ 讓對話框稍微更長
     let boxHeight = 80;
     let boxX = (width - boxWidth) / 2;  // 讓對話框水平置中
     let boxY = 300;
@@ -375,8 +375,8 @@ class Textbox {
     textLeading(16);
     textAlign(LEFT, TOP);
 
-    let textPaddingX = 75;  // 讓文字區塊稍微靠右，視覺上更平衡
-    let textPaddingY = 15;  // 讓文字不貼著框頂部
+    let textPaddingX = 85;  // ★ 進一步調整 Padding，讓左邊間距更自然
+    let textPaddingY = 18;  // ★ 讓文字稍微往下，避免太貼近頂部
 
     text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
   }
