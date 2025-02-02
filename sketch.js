@@ -48,11 +48,11 @@ var decisionMap = {
   11: { z: 12, x: 12 },   // e[11] in scene 11
   12: { z: 13, x: 14 },   // bb[22] in scene 12
 //  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
-  14: { z: 15, x: 15 },   // ii[12] in scene 14
-  15: { z: 16, x: 16 },   // oo[5] in scene 15
-  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
-  17: { z: 18, x: 18 },   // jj[15] in scene 17
-  18: { z: 19, x: 19 },   // kk[8] in scene 18
+//  14: { z: 15, x: 15 },   // ii[12] in scene 14
+//  15: { z: 16, x: 16 },   // oo[5] in scene 15
+//  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
+//  17: { z: 18, x: 18 },   // jj[15] in scene 17
+//  18: { z: 19, x: 19 },   // kk[8] in scene 18
   19: { z: 20, x: 20 },   // vv[8] in scene 19
   21: { z: 22, x: 22 }    // nn[16] in scene 21
 };
@@ -71,6 +71,7 @@ var transitions = {
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
   13: { z: 15, x: 15 },
+  14: { z: 15, x: 15 },
   15: { z: 16, x: 16 },
   16: { z: 17, x: 17 },
   17: { z: 18, x: 18 },
@@ -229,13 +230,13 @@ function setup() {
   ii[9] = "I trust my decision...?";
   ii[10] = "Really?";
   ii[11] = "Of course not! I have to get out!";
-  ii[12] = "press [z] to escape";
+//  ii[12] = "press [z] to escape";
 
   oo[1] = "...";
   oo[2] = "...What in the world?";
   oo[3] = "What happened?";
   oo[4] = "It doesn't look like the place I've been before...";
-  oo[5] = "press [x] to look around";
+//  oo[5] = "press [x] to look around";
 
   cc[1] = "...";
   cc[2] = "What is wrong with the world?";
@@ -245,7 +246,7 @@ function setup() {
   cc[6] = "...";
   cc[7] = "Can anyone help...";
   cc[8] = "......";
-  cc[9] = "press [z] to try and survive";
+//  cc[9] = "press [z] to try and survive";
 
   jj[1] = "I'll try...";
   jj[2] = "I finally got out! I have to at least try.";
@@ -261,7 +262,7 @@ function setup() {
   jj[12] = "...";
   jj[13] = "*footstep sounds*";
   jj[14] = "What...?";
-  jj[15] = "press [z] to open my eyes";
+//  jj[15] = "press [z] to open my eyes";
 
   kk[1] = "...Haha.";
   kk[2] = "It's them again.";
@@ -270,7 +271,7 @@ function setup() {
   kk[5] = "It's funny how I felt relieved by their presence.";
   kk[6] = "Maybe this is the only way to survive now...";
   kk[7] = "Is it better to be imprisoned than to starve?";
-  kk[8] = "press [z] to close my eyes and let them abduct me again";
+  kk[8] = "I closed my eyes, surrendering to my fate.";
 
   vv[1] = "...";
   vv[2] = "Of course... Here they are.";
