@@ -22,7 +22,7 @@ var s = [], a = [], d = [], f = [], g = [], h = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// 各場景對話索引（從 1 開始），必須用 var 以便 window[...] 正確存取
+// 各場景對話索引（從 1 開始），請用 var 以便 window[...] 正確存取
 var i = 1, u = 1, y = 1, t = 1, r = 1, ee = 1, qq = 1, aa = 1, b = 1, c = 1;
 var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
@@ -54,7 +54,7 @@ var decisionMap = {
 };
 
 //------------------------------
-// 轉場設定（非決策場景中，對話讀完後自動切換，左右結果相同）
+// 轉場設定（非決策場景中，對話讀完後自動切換；左右結果相同）
 //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
@@ -70,7 +70,7 @@ var transitions = {
   18: { z: 19, x: 19 },
   19: { z: 20, x: 20 },
   20: { z: 21, x: 21 },
-  22: { z: 23, x: 23 }  // scene 23 為結尾
+  22: { z: 23, x: 23 }  // 結尾後進入 scene 23（End）
 };
 
 //------------------------------
@@ -170,8 +170,7 @@ function setup() {
   e[2] = "... Wait! It's coming towards me!";
   e[3] = "What is it going to do?";
   e[4] = "... Is that a... syringe?";
-  // 將原本 e[5] 的提示刪除，改為純文字
-  e[5] = "I plead, 'Stop! Please don't hurt me!'";
+  e[5] = "press [z] to plead, 'Stop! Please don't hurt me!'";
   e[6] = "I keep yelling, yet it just keep getting closer...";
   e[7] = "...!";
   e[8] = "It grabs my arm and injects something inside...";
@@ -220,7 +219,7 @@ function setup() {
   ii[6] = "Right?";
   ii[7] = "...";
   ii[8] = "I trust my decision...";
-  ii[9] = "I trust my decision...?";
+  ii[9] = "I trust my decision...?"; 
   ii[10] = "Really?";
   ii[11] = "Of course not! I have to get out!";
   ii[12] = "press [z] to escape";
@@ -361,8 +360,7 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 調整文字框高度為 70
-    rect(15, 330, 680, 70);
+    rect(15, 330, 680, 50);
     noStroke();
     fill(255);
     textSize(14);
@@ -388,7 +386,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 僅當目前行為決策提示且為最後一行時，才接受鍵盤輸入
+    // 只有當前行為決策提示且已是該陣列最後一筆時才接受鍵盤輸入
     if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -408,8 +406,8 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前行包含 "press" 且為最後一行，則不接受鼠標點擊（等待鍵盤輸入）
-    if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
+    // 若當前行為決策提示，則不接受鼠標點擊
+    if (currentText.toLowerCase().indexOf("press") !== -1) {
       return;
     }
     // 只在當前索引小於 (陣列長度 - 1) 時推進，以免跳過決策提示
@@ -512,12 +510,12 @@ function drawDialogueWithBars(bgImg) {
 //------------------------------
 function drawTranquilizerScene() {
   push();
-  // 只有當 e 的對話進度大於 8（即 e[9] 之後）時開始降低透明度
+  // 當 e 陣列的對話進度大於 8（即 e[9] 之後）時開始降低透明度
   if (ff > 8 && transparency2 > 0) {
     transparency2 -= 0.9;
   }
   tint(255, transparency2);
-  // 注射場景背景在牢籠內，疊加 barsImg
+  // 注射場景通常在牢籠中，所以疊加 barsImg
   image(alientranquilizerImg, 0, 0);
   image(barsImg, 0, 0);
   pop();
@@ -575,7 +573,7 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //------------------------------
 function drawBaseScene() {
-  // 初始場景也在牢籠中，故使用帶欄杆的對話呈現
+  // 初始場景（s 陣列）應在牢籠中，故用帶欄杆的方式
   drawDialogueWithBars(alienlabImg);
 }
 
@@ -585,6 +583,7 @@ function drawBaseScene() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
+    // 封面：只接受空白鍵
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
