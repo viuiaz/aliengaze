@@ -464,7 +464,7 @@ function drawScene(textContent, bgImg) {
   fill(255);
   textSize(14);
   text("- click to continue -", 248, 40);
-  text(textContent, 28, 350);
+  text(textContent, 28, 320);
 }
 
 //------------------------------
@@ -479,7 +479,7 @@ function drawSceneWithBars(textContent, bgImg) {
   fill(255);
   textSize(14);
   text("- click to continue -", 248, 40);
-  text(textContent, 28, 350);
+  text(textContent, 28, 320);
 }
 
 function drawDialogueWithBars(bgImg) {
