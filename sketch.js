@@ -1,6 +1,4 @@
-//------------------------------
-// 0. 全域變數
-//------------------------------
+// 全域變數宣告
 var sceneNumber = 0;    // 0 = 封面, 1 = 正式遊戲
 var gameScene = 0;      // 正式遊戲中的場景編號
 
@@ -16,13 +14,16 @@ var ruinImg, ruin2Img, alienImg, meerkatreflectionImg, meerkatImg;
 // 字體
 var SuperLegendBoy;
 
+// 文字框物件
+var myTextbox;
+
 // 對話陣列（0-index，內容保持原順序）
 var s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
-// (以下僅舉例，請依原始內容逐項設定)
+// 以下依照原始內容填入對話（此處僅舉例，請依你原始文本調整）
 s[0] = "...";
 s[1] = "... What?";
 s[2] = "What is happening?";
@@ -281,7 +282,8 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 將文字框固定在畫面底部，保留 margin (y = 324, 寬680, 高50)
+    // 將文字框固定在畫面底部，保留 margin 20
+    // 畫布高度 394，設定文字框 y = 394 - 70 = 324，寬680，高50
     rect(15, 324, 680, 50);
     noStroke();
     fill(255);
@@ -307,7 +309,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 當前行若包含 "press" 且為最後一筆，才接受鍵盤輸入
+    // 當前行若包含 "press" 且為最後一筆，接受鍵盤輸入
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -327,7 +329,7 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前行含有 "press" 且為最後一筆，則不接受滑鼠點擊
+    // 若當前行含 "press" 且為最後一筆，則不接受滑鼠點擊
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       return;
     }
@@ -385,7 +387,7 @@ function drawScene(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  // 將 "click to continue" 保持在原來位置（上方）
+  // 將 "click to continue" 與文字都繪製在文字框內 (x=28,y=340,寬640,高40)
   text("- click to continue -", 248, 340, 640, 40);
   text(textContent, 28, 340, 640, 40);
 }
@@ -492,7 +494,6 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //------------------------------
 function drawBaseScene() {
-  // 初始場景（s 陣列）也使用帶欄杆的方式
   drawDialogueWithBars(alienlabImg);
 }
 
