@@ -363,7 +363,7 @@ class Textbox {
 
     let boxWidth = 650;  // 對話框長度
     let boxHeight = 80;
-    let boxX = (width - boxWidth) / 2;  // 水平置中
+    let boxX = (width - boxWidth) / 2;  // 讓對話框水平置中
     let boxY = 300;
 
     rect(boxX, boxY, boxWidth, boxHeight);
@@ -375,8 +375,8 @@ class Textbox {
     textLeading(16);
     textAlign(LEFT, TOP);
 
-    let textPaddingX = 40;  // 增加左右內邊距，讓文字更居中
-    let textPaddingY = 10;  // 讓文字不貼著框頂部
+    let textPaddingX = 60;  // 讓文字區塊稍微靠右，視覺上更平衡
+    let textPaddingY = 15;  // 讓文字不貼著框頂部
 
     text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
   }
