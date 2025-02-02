@@ -165,7 +165,7 @@ function setup() {
   q[1] = "I started to walk around...";
   q[2] = "I felt that this helped to alleviate some of my anxiety.";
   q[3] = "One of them frowned, just slightly...";
-  q[4] = "A hint of... something? Concern? Amusement?"";
+  q[4] = "A hint of... something? Concern? Amusement?";
   q[5] = "I'm starting to feel a little tired.";
   q[6] = "I sighed and sank into the corner.";
 
