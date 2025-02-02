@@ -47,7 +47,7 @@ var decisionMap = {
   10: { z: 11, x: 11 },   // w[5] in scene 10
   11: { z: 12, x: 12 },   // e[11] in scene 11
   12: { z: 13, x: 14 },   // bb[22] in scene 12
-  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
+//  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
   14: { z: 15, x: 15 },   // ii[12] in scene 14
   15: { z: 16, x: 16 },   // oo[5] in scene 15
   16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
@@ -67,7 +67,7 @@ var transitions = {
  // 8: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
-  13: { z: 14, x: 14 },
+  13: { z: 15, x: 15 },
   15: { z: 16, x: 16 },
   16: { z: 17, x: 17 },
   17: { z: 18, x: 18 },
@@ -213,7 +213,7 @@ function setup() {
   ss[6] = "I don't even know what to feel after these uncountable days...";
   ss[7] = "...";
   ss[8] = "I ran out immediately without a second thought.";
-  ss[9] = "press [z] to get out";
+//  ss[9] = "press [z] to get out";
 
   ii[1] = "I don't believe I'll have the chance to get out...";
   ii[2] = "Maybe staying here is the best option.";
