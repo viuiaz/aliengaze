@@ -36,8 +36,8 @@ var decisionMap = {
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
   6: { z: 7, x: 7 },      // j[3] in scene 6
-  7: { z: 10, x: 9 },      // k[6] in scene 7
-  8: { z: 9, x: 9 },      // l[3] in scene 8
+  7: { z: 8, x: 9 },      // k[6] in scene 7
+  8: { z: 10, x: 9 },      // l[3] in scene 8
   9: { z: 10, x: 10 },    // q[6] in scene 9
   10: { z: 11, x: 11 },   // w[5] in scene 10
   11: { z: 12, x: 12 },   // e[11] in scene 11
@@ -59,7 +59,7 @@ var transitions = {
   1: { z: 3, x: 3 },
   3: { z: 4, x: 4 },
   5: { z: 6, x: 6 },
-  8: { z: 10, x: 10 },
+ // 8: { z: 10, x: 10 },
   10: { z: 11, x: 11 },
   11: { z: 12, x: 12 },
   13: { z: 14, x: 14 },
