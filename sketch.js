@@ -360,14 +360,24 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 調整文字框上移：將 y 座標由 330 改為 300；高度設為 50
-    rect(15, 300, 680, 80);
+
+    let boxWidth = 600;  // 設定對話框寬度
+    let boxHeight = 80;  // 設定對話框高度
+    let boxX = (width - boxWidth) / 2;  // 讓對話框水平置中
+    let boxY = 300;  // 保持 y 軸位置
+
+    rect(boxX, boxY, boxWidth, boxHeight);
+    
     noStroke();
     fill(255);
     textSize(14);
     textWrap(WORD);
     textLeading(16);
-    textAlign(LEFT, TOP);
+    
+    textAlign(LEFT, TOP);  // 讓文字左對齊
+
+    let textPadding = 20;  // 給文字留點內邊距
+    text(textContent, boxX + textPadding, boxY + 10, boxWidth - textPadding * 2);
   }
 }
 
