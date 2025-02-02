@@ -8,8 +8,6 @@ var alphaTranquil = 0;    // tranquilizer 圖片的透明度
 var isFading = false;     // 是否正在進行淡入
 var alphaBlack = 0;       // 負責黑幕的透明度
 var isFadingBlack = false; // 是否已經開始淡入黑幕
-var nnBgAlpha = 255; // 用來控制 nn 場景的背景淡出 (0~255)
-var mmBgAlpha = 0;   // 用來控制 mm 場景的背景淡入 (0~255)
 
 // 透明度控制（特殊場景用）
 var transparency2 = 255, transparency3 = 0;
@@ -374,7 +372,7 @@ class Textbox {
     textLeading(16);
     textAlign(LEFT, TOP);
 
-    let textPaddingX = 18;  // ★ 進一步調整 Padding，讓左邊間距更自然
+    let textPaddingX = 85;  // ★ 進一步調整 Padding，讓左邊間距更自然
     let textPaddingY = 18;  // ★ 讓文字稍微往下，避免太貼近頂部
 
     text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
@@ -660,47 +658,13 @@ function drawHHScene() {
 }
 
 function drawNNScene() {
-  // 1) 如果還沒淡出，nnBgAlpha = 255；當讀到 nn[16] 時開始遞減
-  if (nnn === 16) {
-    nnBgAlpha -= 5;  // 數字越大，淡出越快
-    if (nnBgAlpha < 0) {
-      nnBgAlpha = 0; 
-      // 淡到全透明後 → 切換到 scene 22
-      gameScene = 22;
-      mmm = 1;
-      mmBgAlpha = 0;  // mm 場景一開始是透明
-    }
-  }
-
-  // 2) 用 tint() 控制背景圖片的透明度
   push();
-  tint(255, nnBgAlpha);  
-  image(meerkatreflectionImg, 0, 0); // nn 場景的背景
+  if (transparency7 < 255) transparency7 += 0.4;
+  tint(255, transparency7);
+  image(meerkatreflectionImg, 0, 0);
   pop();
-
-  // 3) 顯示文字（不會被 tint 影響）
-  myTextbox.showTextbox(nn[nnn]);
+  drawScene(nn[nnn], null);
 }
-
-function drawMMScene() {
-  // 1) 若 mmBgAlpha 還沒到 255，則遞增製造淡入效果
-  if (mmBgAlpha < 255) {
-    mmBgAlpha += 5; // 數字越大，淡入越快
-    if (mmBgAlpha > 255) {
-      mmBgAlpha = 255; 
-    }
-  }
-
-  // 2) 用 tint(255, mmBgAlpha) 顯示 mm 場景的背景圖片
-  push();
-  tint(255, mmBgAlpha);
-  image(meerkatImg, 0, 0);  // mm 場景的背景
-  pop();
-
-  // 3) 顯示文字（不會被 tint 影響）
-  myTextbox.showTextbox(mm[mmm]);
-}
-
 
 //------------------------------
 // 初始場景繪製（gameScene 0 使用）
@@ -747,10 +711,8 @@ function draw() {
       case 19: drawSceneWithBars(vv[vvv], aliencrowdImg); break;
       case 20: drawHHScene(); break;
       case 21: drawNNScene(); break;
-      case 22:
-  drawMMScene();
-  break;
-        case 23:
+      case 22: drawScene(mm[mmm], meerkatImg); break;
+      case 23:
         background(0);
         fill(255);
         textSize(30);
