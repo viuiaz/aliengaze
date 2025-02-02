@@ -357,13 +357,13 @@ function resetSceneIndexes(newScene) {
 // 文字框類別
 //------------------------------
 class Textbox {
-  showTextbox(textContent = "...") {  // 預防 textContent 為 undefined
+  showTextbox(textContent = "") {  // 預設值改成空字串
     stroke(255);
     fill(0);
 
-    let boxWidth = 650;  // 增加對話框長度
+    let boxWidth = 650;  // 對話框長度
     let boxHeight = 80;
-    let boxX = (width - boxWidth) / 2;  // 讓對話框水平置中
+    let boxX = (width - boxWidth) / 2;  // 水平置中
     let boxY = 300;
 
     rect(boxX, boxY, boxWidth, boxHeight);
@@ -373,10 +373,12 @@ class Textbox {
     textSize(14);
     textWrap(WORD);
     textLeading(16);
-    textAlign(LEFT, TOP);  // 讓文字靠左對齊
+    textAlign(LEFT, TOP);
 
-    let textPadding = 20;  // 讓文字不貼邊
-    text(textContent, boxX + textPadding, boxY + 10, boxWidth - textPadding * 2);
+    let textPaddingX = 40;  // 增加左右內邊距，讓文字更居中
+    let textPaddingY = 10;  // 讓文字不貼著框頂部
+
+    text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
   }
 }
 
