@@ -570,7 +570,10 @@ function drawTranquilizerScene() {
   }
   // -----------------------------------------------------------
 
-  // 4) 顯示文字框 + 文字
+  // 4) 顯示欄杆
+  image(barsImg, 0, 0);
+
+  // 5) 顯示文字框 + 文字
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
