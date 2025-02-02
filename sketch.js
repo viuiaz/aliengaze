@@ -37,7 +37,7 @@ var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 //------------------------------
 var decisionMap = {
   0: { z: 1, x: 2 },      // s[11] in scene 0
-  2: { z: 3, x: 3 },      // d[2] in scene 2
+//  2: { z: 3, x: 3 },      // d[2] in scene 2
   4: { z: 5, x: 5 },      // f[4] in scene 4
   5: { z: 6, x: 6 },      // h[5] in scene 5
   6: { z: 7, x: 7 },      // j[3] in scene 6
@@ -62,6 +62,7 @@ var decisionMap = {
 //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
+  2: { z: 3, x: 3 },
   3: { z: 4, x: 4 },
   5: { z: 6, x: 6 },
  // 8: { z: 10, x: 10 },
@@ -126,7 +127,7 @@ function setup() {
   a[4] = "I sat in the corner, trying to figure out what they might do next.";
 
   d[1] = "I'll just wait and see what's going to happen.";
-  d[2] = "press [z] to sit in the corner and observe";
+//  d[2] = "press [z] to sit in the corner and observe";
 
   g[1] = "After hours of waiting, I fell asleep.";
   g[2] = "press [z] to wake up";
