@@ -512,36 +512,37 @@ function drawDialogueWithBars(bgImg) {
 // 特殊場景繪製函式（帶透明度效果）
 //------------------------------
 function drawTranquilizerScene() {
-  // 1) 判斷目前對話行數 ff
-  var idx = ff;         
+  // 1) 判斷目前對話行數
+  var idx = ff;
   var txt = e[idx] || "";
 
-  // 2) 根據對話行數，決定是否要啟動淡入
+  // 2) 如果到了 e[2]，開始淡入 tranquilizer 圖
   if (idx === 2) {
-    // (原本) e[2] 時，開始淡入 tranquilizerImg
     isFading = true;
   }
 
-  // ----------- 新增：當對話到 e[9] 時，開始淡入黑幕 -----------
+  // 3) 如果到了 e[9]，開始黑幕淡入
   if (idx >= 9) {
     isFadingBlack = true;
   }
-  // -----------------------------------------------------------
 
-  // 3) 畫面背景：若 ff < 8，顯示普通實驗室 + tranquilizer 淡入；若 ff >= 8，顯示 tranquilizer2
+  // 4) 繪製背景：idx < 8 顯示淡入 tranquilizer；>= 8 顯示 tranquilizer2
   if (idx < 8) {
+    // 普通實驗室
     push();
     tint(255, alphaLab);
     image(alienlabImg, 0, 0);
     pop();
 
+    // tranquilizer
     push();
     tint(255, alphaTranquil);
     image(alientranquilizerImg, 0, 0);
     pop();
 
+    // 淡入邏輯
     if (isFading && alphaTranquil < 255) {
-      alphaLab    -= 3;
+      alphaLab      -= 3;
       alphaTranquil += 3;
       if (alphaTranquil >= 255) {
         alphaTranquil = 255;
@@ -553,27 +554,30 @@ function drawTranquilizerScene() {
       }
     }
   } else {
+    // e[8] 以後，直接 tranquilizer2
     image(alientranquilizer2Img, 0, 0);
   }
 
-  // ----------- 新增：在這裡做黑幕淡入 (蓋在背景之上，但在欄杆和文字框之下) -----------
+  // 5) 先顯示欄杆
+  image(barsImg, 0, 0);
+
+  // ─────────────────────────────────────────────
+  //  ★ 關鍵：把黑幕的程式搬到這裡 ★
+  // ─────────────────────────────────────────────
+  //    → 這樣就能把欄杆一起蓋掉，後面再畫文字框與文字
   if (isFadingBlack) {
-    alphaBlack += 3;   // 每幀 +3，越大越快
+    alphaBlack += 3;  // 加 3 表示每幀漸漸變深
     if (alphaBlack > 255) {
-      alphaBlack = 255;
+      alphaBlack = 255; // 最深即全黑
     }
     push();
     noStroke();
     fill(0, alphaBlack);
-    rect(0, 0, width, height); // 在整個畫面蓋上半透明黑色
+    rect(0, 0, width, height); // 在整個畫面蓋上黑色
     pop();
   }
-  // -----------------------------------------------------------
 
-  // 4) 顯示欄杆
-  image(barsImg, 0, 0);
-
-  // 5) 顯示文字框 + 文字
+  // 6) 顯示文字框 + 文字
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -584,6 +588,7 @@ function drawTranquilizerScene() {
   text(prompt, 248, 40);
   text(txt, 28, 320, 650);
 }
+
 
 function drawBBScene() {
   push();
