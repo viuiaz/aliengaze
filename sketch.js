@@ -43,7 +43,7 @@ var decisionMap = {
   10: { z: 11, x: 11 },   // w[5]
   11: { z: 12, x: 12 },   // e[11]
   12: { z: 13, x: 14 },   // bb[22]
-  13: { z: 15, x: 15 },   // ss[9]
+  13: { z: 15, x: 15 },   // ss[9] ("press [z] to get out")
   14: { z: 15, x: 15 },   // ii[12]
   15: { z: 16, x: 16 },   // oo[5]
   16: { z: 17, x: 17 },   // cc[9] ("press [z] to try and survive")
@@ -54,8 +54,9 @@ var decisionMap = {
 };
 
 //------------------------------
-// 轉場設定（非決策場景，對話讀完後自動切換；左右結果相同）
-//------------------------------
+// 轉場設定
+//（非決策場景中，對話讀完後自動切換；左右結果相同）
+ //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
   3: { z: 4, x: 4 },
@@ -360,8 +361,8 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 將文字框上移，位置設為 y=280，寬680，高60
-    rect(15, 280, 680, 60);
+    // 文字框固定在畫面下方，y = 330, 寬680, 高50
+    rect(15, 330, 680, 50);
     noStroke();
     fill(255);
     textSize(14);
@@ -386,7 +387,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 只有當目前行為決策提示且為最後一行時，才接受鍵盤輸入
+    // 當前行若含有 "press" 且為最後一筆，才接受鍵盤輸入
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -406,7 +407,7 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若當前行為決策提示且為最後一行，則不接受鼠標點擊
+    // 若當前行含有 "press" 且為最後一筆，則不接受滑鼠點擊
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       return;
     }
@@ -464,9 +465,9 @@ function drawScene(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  // 指定繪製文字區域 (x, y, width, height)
-  text("- click to continue -", 248, 290, 640, 40);
-  text(textContent, 28, 290, 640, 40);
+  // 文字框內繪製文字區域 (x=28, y=340, 寬640, 高40)
+  text("- click to continue -", 248, 340, 640, 40);
+  text(textContent, 28, 340, 640, 40);
 }
 
 //------------------------------
@@ -480,8 +481,8 @@ function drawSceneWithBars(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  text("- click to continue -", 248, 290, 640, 40);
-  text(textContent, 28, 290, 640, 40);
+  text("- click to continue -", 248, 340, 640, 40);
+  text(textContent, 28, 340, 640, 40);
 }
 
 function drawDialogueWithBars(bgImg) {
@@ -501,8 +502,8 @@ function drawDialogueWithBars(bgImg) {
   } else {
     prompt = "- click to continue -";
   }
-  text(prompt, 248, 290, 640, 40);
-  text(currentText, 28, 290, 640, 40);
+  text(prompt, 248, 340, 640, 40);
+  text(currentText, 28, 340, 640, 40);
 }
 
 //------------------------------
