@@ -8,6 +8,8 @@ var alphaTranquil = 0;    // tranquilizer 圖片的透明度
 var isFading = false;     // 是否正在進行淡入
 var alphaBlack = 0;       // 負責黑幕的透明度
 var isFadingBlack = false; // 是否已經開始淡入黑幕
+var isNNFadingOut = false;  // 是否在 nn 場景準備淡出
+var isMMFadingIn = false;   // 是否在 mm 場景準備淡入
 
 // 透明度控制（特殊場景用）
 var transparency2 = 255, transparency3 = 0;
@@ -299,8 +301,8 @@ function setup() {
 mm[1] = "......";
 mm[2] = "So, I’m just a meerkat.";
 mm[3] = "That’s why my last memory was of sand... of a burrow.";
-mm[4] = "The warmth I thought was the sun… it was a heat lamp.";
-mm[5] = "The eyes watching me weren’t aliens...";
+mm[4] = "The warmth I thought was the sun... it was a heat lamp.";
+mm[5] = "The eyes watching me weren’t aliens.";
 mm[6] = "I almost believed it.";
 mm[7] = "That I was something more.";
 mm[8] = "That I could escape.";
@@ -658,12 +660,66 @@ function drawHHScene() {
 }
 
 function drawNNScene() {
+  // 1) 你的原本畫面顯示邏輯 (含 transparency7 的漸進)
   push();
   if (transparency7 < 255) transparency7 += 0.4;
   tint(255, transparency7);
   image(meerkatreflectionImg, 0, 0);
   pop();
-  drawScene(nn[nnn], null);
+
+  // 2) 顯示對話
+  myTextbox.showTextbox(nn[nnn]);
+
+  // 3) 如果對話走到 nn[16]，啟動淡出
+  if (nnn === 16) {
+    isNNFadingOut = true;
+  }
+
+  // 4) 執行淡出 (畫面變黑)
+  if (isNNFadingOut) {
+    alphaBlack += 5;  // 數字越大，淡出越快
+    if (alphaBlack >= 255) {
+      alphaBlack = 255;
+      isNNFadingOut = false;
+
+      // 5) 淡到全黑後 → 切到 scene 22（mm[1]）
+      gameScene = 22;
+      mmm = 1;               // mm 陣列重置到第一句
+      isMMFadingIn = true;   // 接下來就要淡入
+    }
+  }
+
+  // 6) 畫黑幕
+  push();
+  noStroke();
+  fill(0, alphaBlack);
+  rect(0, 0, width, height);
+  pop();
+}
+
+function drawMMScene() {
+  // 1) 背景：顯示背景圖片（或全黑），這裡用 meerkatImg
+  image(meerkatImg, 0, 0);
+
+  // 2) 顯示文字框 + mm[mmm] 文字
+  myTextbox.showTextbox(mm[mmm]);
+
+  // 3) 如果正在淡入 (isMMFadingIn = true)，就讓 alphaBlack 從 255 降到 0
+  if (isMMFadingIn) {
+    alphaBlack -= 5;  // 數字越大，淡入越快
+    if (alphaBlack <= 0) {
+      alphaBlack = 0;
+      isMMFadingIn = false;  // 淡入結束
+    }
+  }
+
+  // 4) 用一個半透明黑色矩形覆蓋畫面
+  //    alphaBlack 越小 → 越透明 → 螢幕越亮
+  push();
+  noStroke();
+  fill(0, alphaBlack);
+  rect(0, 0, width, height);
+  pop();
 }
 
 //------------------------------
@@ -711,7 +767,7 @@ function draw() {
       case 19: drawSceneWithBars(vv[vvv], aliencrowdImg); break;
       case 20: drawHHScene(); break;
       case 21: drawNNScene(); break;
-      case 22: drawScene(mm[mmm], meerkatImg); break;
+      case 22: drawMMScene(); break;
       case 23:
         background(0);
         fill(255);
