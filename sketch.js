@@ -142,7 +142,7 @@ function setup() {
   h[2] = "*footstep sounds*";
   h[3] = "...";
   h[4] = "They are back! I don't know what they will do to me...";
-  h[5] = "The sound of footsteps grew louder. I shrank into the corner, my heart pounding.";
+  h[5] = "I shrank into the corner, my heart pounding.";
 
   j[1] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
   j[2] = "...What are they even saying?";
