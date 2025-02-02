@@ -54,7 +54,7 @@ var decisionMap = {
 //  17: { z: 18, x: 18 },   // jj[15] in scene 17
 //  18: { z: 19, x: 19 },   // kk[8] in scene 18
 //  19: { z: 20, x: 20 },   // vv[8] in scene 19
-  21: { z: 22, x: 22 }    // nn[16] in scene 21
+//  21: { z: 22, x: 22 }    // nn[16] in scene 21
 };
 
 //------------------------------
@@ -78,6 +78,7 @@ var transitions = {
   18: { z: 19, x: 19 },
   19: { z: 20, x: 20 },
   20: { z: 21, x: 21 },
+  21: { z: 22, x: 22 },
   22: { z: 23, x: 23 }  // scene 23 為結尾
 };
 
@@ -309,10 +310,10 @@ function setup() {
   nn[13] = "???";
   nn[14] = "Is that me?";
   nn[15] = "......";
-  nn[16] = "press [z] to face the reality";
+  nn[16] = "I took a deep breath.";
 
   mm[1] = "....";
-  mm[2] = "So, I am just a meerkat...?";
+  mm[2] = "So, I am just a meerkat...";
   mm[3] = "That's why my last memory is in a dessert...";
   mm[4] = "... Haha.";
   mm[5] = "How funny is this.";
@@ -325,19 +326,15 @@ function setup() {
   mm[12] = "Will I plan on escaping just like in the dream?";
   mm[13] = "Well.";
   mm[14] = "I am just a meerkat.";
-  mm[15] = "What can I do?";
-  mm[16] = ".";
-  mm[17] = ".";
-  mm[18] = ".";
-  mm[19] = ".";
-  mm[20] = ".";
-  mm[21] = ".";
-  mm[22] = ".";
-  mm[23] = ".";
-  mm[24] = "Oh, why are you still here?";
-  mm[25] = "You can't do anything for me.";
-  mm[26] = "So, please...";
-  mm[27] = "Just leave me alone.";
+ mm[15] = "What can I do?";
+ mm[16] = ".";
+ mm[17] = ".";
+ mm[18] = ".";
+ mm[19] = "Oh, why are you still here?";
+ mm[20] = "You can't do anything for me.";
+ mm[21] = "So, please...";
+ mm[22] = "Just leave me alone.";
+
 
   myTextbox = new Textbox();
 }
