@@ -375,7 +375,7 @@ class Textbox {
     textLeading(16);
     textAlign(LEFT, TOP);
 
-    let textPaddingX = 60;  // 讓文字區塊稍微靠右，視覺上更平衡
+    let textPaddingX = 75;  // 讓文字區塊稍微靠右，視覺上更平衡
     let textPaddingY = 15;  // 讓文字不貼著框頂部
 
     text(textContent, boxX + textPaddingX, boxY + textPaddingY, boxWidth - textPaddingX * 2);
