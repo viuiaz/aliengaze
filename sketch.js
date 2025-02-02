@@ -20,13 +20,14 @@ var SuperLegendBoy;
 var myTextbox;
 
 // ==============================
-// 對話陣列（均採用 0-index）
-// 以下內容依據你的原始對話（請確認或自行補齊所有段落）
+// 對話陣列（0-index，內容請根據你原始文本調整）
+// ==============================
 var s = [], a = [], d = [], f = [], g = [], h = [],
     j = [], k = [], l = [], q = [], w = [], e = [],
     bb = [], ss = [], ii = [], oo = [], cc = [],
     jj = [], kk = [], vv = [], hh = [], nn = [], mm = [];
 
+// 對話內容
 // (封面、初始對話)
 s[0] = "...";
 s[1] = "... What?";
@@ -67,7 +68,7 @@ h[2] = "...";
 h[3] = "They are back! I don't know what they will do to me...";
 h[4] = "press [z] to cower in the corner";
 
-// (外星人雜音)
+// (外星人語音)
 j[0] = "'De!hctaw#gnieb2ekillee*ftiseo<dwoh...'";
 j[1] = "...What are they even saying? Please speak English!";
 j[2] = "press [z] to listen carefully";
@@ -113,12 +114,12 @@ e[8] = "... Getting... sleepy... again.";
 e[9] = "...";
 e[10] = "press [z] to wake up";
 
-// (逃脫關鍵物)
+// (其他對話內容請依原始完整內容補齊)
+// 以下僅示範部分（請根據你原始資料補上 bb, ss, ii, oo, cc, jj, kk, vv, hh, nn, mm）
 bb[0] = "I don't know how long I slept...";
-// (其餘 bb、ss、ii、oo、cc、jj、kk、vv、hh、nn、mm 請根據原始內容補全，此處僅示範部分)
 ss[0] = "This will be my only chance.";
 ii[0] = "I don't believe I'll have the chance to get out...";
-// 請自行補全其他陣列……
+// …（其他對話請補全）
 
 // ==============================
 // Preload 與 Setup
@@ -150,7 +151,7 @@ function setup() {
 }
 
 // ==============================
-// Reset 對話索引：每個場景切換時，將對應索引設為 0
+// Reset 對話索引（每個場景切換時，對應的索引設為 0）
 // ==============================
 function resetSceneIndexes(newScene) {
   var resetMap = {
@@ -170,14 +171,14 @@ function resetSceneIndexes(newScene) {
 }
 
 // ==============================
-// 文字框類別：調整文字框位置與尺寸
+// 文字框類別
 // ==============================
 class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    // 將文字框固定在畫面底部：y = 324, 寬 680, 高 50
-    rect(15, 324, 680, 50);
+    // 將文字框固定在畫布底部：使底部對齊（394 - 50 = 344），並留有左右 margin
+    rect(15, 344, 680, 50);
     noStroke();
     fill(255);
     textSize(14);
@@ -202,7 +203,7 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 當前行若包含 "press" 且為最後一筆，接受鍵盤輸入
+    // 當前行如果包含 "press" 且為該陣列最後一筆，則接受鍵盤輸入
     if (idx === mapping.arr.length - 1 && currentText.toLowerCase().indexOf("press") !== -1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
@@ -279,9 +280,10 @@ function drawScene(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  // "click to continue" 固定在文字框上方 (例如 y = 335)
-  text("- click to continue -", 248, 335, 640, 30);
-  text(textContent, 28, 365, 640, 30);
+  // 將 "- click to continue -" 顯示在文字框上方 (y=330)
+  text("- click to continue -", 248, 330, 640, 30);
+  // 對話文字顯示在文字框內下方 (y=355)
+  text(textContent, 28, 355, 640, 30);
 }
 
 function drawSceneWithBars(textContent, bgImg) {
@@ -292,8 +294,8 @@ function drawSceneWithBars(textContent, bgImg) {
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
-  text("- click to continue -", 248, 335, 640, 30);
-  text(textContent, 28, 365, 640, 30);
+  text("- click to continue -", 248, 330, 640, 30);
+  text(textContent, 28, 355, 640, 30);
 }
 
 function drawDialogueWithBars(bgImg) {
@@ -309,8 +311,8 @@ function drawDialogueWithBars(bgImg) {
   var currentText = mapping.arr[idx] || "";
   var prompt = (currentText.toLowerCase().indexOf("press") !== -1) ?
       "- press z or x to choose -" : "- click to continue -";
-  text(prompt, 248, 335, 640, 30);
-  text(currentText, 28, 365, 640, 30);
+  text(prompt, 248, 330, 640, 30);
+  text(currentText, 28, 355, 640, 30);
 }
 
 function drawTranquilizerScene() {
@@ -377,9 +379,13 @@ function drawBaseScene() {
   drawDialogueWithBars(alienlabImg);
 }
 
+// ==============================
+// 主循環
+// ==============================
 function draw() {
   background(0);
   if (sceneNumber === 0) {
+    // 封面畫面
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
