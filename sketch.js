@@ -596,7 +596,7 @@ function draw() {
       case 6: drawSceneWithBars(j[qq], aliencrowd1Img); break;
       case 7: drawSceneWithBars(k[aa], aliencrowdImg); break;
       case 8: drawSceneWithBars(l[b], aliencrowdImg); break;
-      case 9: drawScene(q[c], aliencrowdImg); break;
+      case 9: drawSceneWithBars(q[c], aliencrowdImg); break;
       case 10: drawSceneWithBars(w[dd], alienlabImg); break;
       case 11: drawTranquilizerScene(); break;
       case 12: drawBBScene(); break;
