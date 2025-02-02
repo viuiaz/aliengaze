@@ -28,32 +28,33 @@ var dd = 1, ff = 1, gg = 1, sss = 1, iii = 1, ooo = 1, ccc = 1, jjj = 1;
 var kkk = 1, vvv = 1, hhh = 1, nnn = 1, mmm = 1;
 
 //------------------------------
-// 決策場景分支對照表（所有含 "press" 的對話都視為決策，按鍵僅用 z 與 x）
+// 決策場景分支對照表（所有含 "press" 的對話均視為決策，僅在最後一行才接受鍵盤輸入）
 //------------------------------
 var decisionMap = {
-  0: { z: 1, x: 2 },      // s[11]
-  2: { z: 3, x: 3 },      // d[2]
-  4: { z: 5, x: 5 },      // f[4]
-  5: { z: 6, x: 6 },      // h[5]
-  6: { z: 7, x: 7 },      // j[3]
-  7: { z: 8, x: 9 },      // k[6]
-  8: { z: 9, x: 9 },      // l[3]
-  9: { z: 10, x: 10 },    // q[6]
-  10: { z: 11, x: 11 },   // w[5]
-  11: { z: 12, x: 12 },   // e[11]
-  12: { z: 13, x: 14 },   // bb[22]
-  13: { z: 15, x: 15 },   // ss[9] (改為 press [z] to get out)
-  14: { z: 15, x: 15 },   // ii[12]
-  15: { z: 16, x: 16 },   // oo[5]
-  16: { z: 17, x: 17 },   // cc[9] 改為 "press [z] to try and survive"
-  17: { z: 18, x: 18 },   // jj[15]
-  18: { z: 19, x: 19 },   // kk[8]
-  19: { z: 20, x: 20 },   // vv[8]
-  21: { z: 22, x: 22 }    // nn[16]
+  0: { z: 1, x: 2 },      // s[11] in scene 0
+  2: { z: 3, x: 3 },      // d[2] in scene 2 (單一分支：均→ scene 3)
+  4: { z: 5, x: 5 },      // f[4] in scene 4
+  5: { z: 6, x: 6 },      // h[5] in scene 5
+  6: { z: 7, x: 7 },      // j[3] in scene 6
+  7: { z: 8, x: 9 },      // k[6] in scene 7
+  8: { z: 9, x: 9 },      // l[3] in scene 8
+  9: { z: 10, x: 10 },    // q[6] in scene 9
+  10: { z: 11, x: 11 },   // w[5] in scene 10
+  11: { z: 12, x: 12 },   // e[11] in scene 11
+  12: { z: 13, x: 14 },   // bb[22] in scene 12
+  13: { z: 15, x: 15 },   // ss[9] in scene 13 ("press [z] to get out")
+  14: { z: 15, x: 15 },   // ii[12] in scene 14
+  15: { z: 16, x: 16 },   // oo[5] in scene 15
+  16: { z: 17, x: 17 },   // cc[9] in scene 16 ("press [z] to try and survive")
+  17: { z: 18, x: 18 },   // jj[15] in scene 17
+  18: { z: 19, x: 19 },   // kk[8] in scene 18
+  19: { z: 20, x: 20 },   // vv[8] in scene 19
+  21: { z: 22, x: 22 }    // nn[16] in scene 21
+  // 其他場景無決策需求
 };
 
 //------------------------------
-// 轉場設定（非決策場景中，當對話讀完後自動切換，左右結果相同）
+// 轉場設定（非決策場景中，對話讀完後自動切換，左右結果相同）
 //------------------------------
 var transitions = {
   1: { z: 3, x: 3 },
@@ -68,8 +69,8 @@ var transitions = {
   17: { z: 18, x: 18 },
   18: { z: 19, x: 19 },
   19: { z: 20, x: 20 },
-  20: { z: 21, x: 21 }
-  // 其他場景若無特殊分支，則滑鼠推進後自動以 z 值轉換
+  20: { z: 21, x: 21 },
+  22: { z: 23, x: 23 }  // scene 23 為結尾
 };
 
 //------------------------------
@@ -98,6 +99,8 @@ function preload() {
 function setup() {
   createCanvas(700, 394);
   textFont(SuperLegendBoy);
+  textWrap(WORD);
+  textLeading(18);
   background(0);
 
   // 初始化對話內容（完全保留原始文本，僅將提示鍵改為 z 與 x）
@@ -167,7 +170,8 @@ function setup() {
   e[2] = "... Wait! It's coming towards me!";
   e[3] = "What is it going to do?";
   e[4] = "... Is that a... syringe?";
-  e[5] = "press [z] to plead, 'Stop! Please don't hurt me!'";
+  // 將原本 e[5] 的提示刪除，改為純文字
+  e[5] = "I plead, 'Stop! Please don't hurt me!'";
   e[6] = "I keep yelling, yet it just keep getting closer...";
   e[7] = "...!";
   e[8] = "It grabs my arm and injects something inside...";
@@ -235,8 +239,8 @@ function setup() {
   cc[6] = "...";
   cc[7] = "Can anyone help...";
   cc[8] = "......";
-  cc[9] = "press [z] to try and survive";  // 修改這裡：原本是 press [v], 改為 press [z]
-  
+  cc[9] = "press [z] to try and survive";
+
   jj[1] = "I'll try...";
   jj[2] = "I finally got out! I have to at least try.";
   jj[3] = "Why is it really nothing?";
@@ -357,10 +361,14 @@ class Textbox {
   showTextbox() {
     stroke(255);
     fill(0);
-    rect(15, 330, 680, 50);
+    // 調整文字框高度為 70
+    rect(15, 330, 680, 70);
     noStroke();
     fill(255);
     textSize(14);
+    textWrap(WORD);
+    textLeading(18);
+    textAlign(LEFT, TOP);
   }
 }
 
@@ -380,8 +388,8 @@ function keyPressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 如果對話中含有 "press"（忽略大小寫），則僅接受鍵盤輸入
-    if (currentText.toLowerCase().indexOf("press") !== -1) {
+    // 僅當目前行為決策提示且為最後一行時，才接受鍵盤輸入
+    if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
       if (key === 'z' || key === 'x' || key === 'Z' || key === 'X') {
         if (decisionMap[gameScene]) {
           gameScene = decisionMap[gameScene][key.toLowerCase()];
@@ -400,11 +408,11 @@ function mousePressed() {
     var mapping = dialogueMapping[gameScene];
     var idx = window[mapping.idxVar];
     var currentText = mapping.arr[idx] || "";
-    // 若對話中含有 "press"，則不接受鼠標點擊（等待鍵盤輸入）
-    if (currentText.toLowerCase().indexOf("press") !== -1) {
+    // 若當前行包含 "press" 且為最後一行，則不接受鼠標點擊（等待鍵盤輸入）
+    if (currentText.toLowerCase().indexOf("press") !== -1 && idx >= mapping.arr.length - 1) {
       return;
     }
-    // 僅在當前索引小於 (陣列長度 - 1) 時推進，避免跳過含有選項的那一行
+    // 只在當前索引小於 (陣列長度 - 1) 時推進，以免跳過決策提示
     if (idx < mapping.arr.length - 1) {
       advanceCurrentIndex();
     } else {
@@ -464,10 +472,25 @@ function drawScene(textContent, bgImg) {
 }
 
 //------------------------------
-// 用於依對話映射繪製的場景
+// 帶欄杆背景的繪製函式（適用於需要顯示牢籠欄杆的場景）
 //------------------------------
-function drawDialogue(bgImg) {
-  if (bgImg) image(bgImg, 0, 0);
+function drawSceneWithBars(textContent, bgImg) {
+  if (bgImg) {
+    image(bgImg, 0, 0);
+    image(barsImg, 0, 0);
+  }
+  myTextbox.showTextbox();
+  fill(255);
+  textSize(14);
+  text("- click to continue -", 248, 40);
+  text(textContent, 28, 350);
+}
+
+function drawDialogueWithBars(bgImg) {
+  if (bgImg) {
+    image(bgImg, 0, 0);
+    image(barsImg, 0, 0);
+  }
   myTextbox.showTextbox();
   fill(255);
   textSize(14);
@@ -494,6 +517,7 @@ function drawTranquilizerScene() {
     transparency2 -= 0.9;
   }
   tint(255, transparency2);
+  // 注射場景背景在牢籠內，疊加 barsImg
   image(alientranquilizerImg, 0, 0);
   image(barsImg, 0, 0);
   pop();
@@ -504,7 +528,6 @@ function drawBBScene() {
   push();
   if (transparency3 < 255) transparency3 += 1.9;
   tint(255, transparency3);
-  // 牢籠場景：使用 withoutalienlabImg 並疊加 barsImg
   image(withoutalienlabImg, 0, 0);
   image(barsImg, 0, 0);
   pop();
@@ -523,7 +546,7 @@ function drawJJScene() {
 function drawKKScene() {
   push();
   if (transparency5 < 255) transparency5 += 0.55;
-  tint(transparency5, 255);
+  tint(255, transparency5);
   image(alienImg, 0, 0);
   pop();
   drawScene(kk[kkk], null);
@@ -533,7 +556,6 @@ function drawHHScene() {
   push();
   if (transparency6 > 0) transparency6 -= 0.45;
   tint(255, transparency6);
-  // 牢籠場景：使用 alienlabImg 並疊加 barsImg
   image(alienlabImg, 0, 0);
   image(barsImg, 0, 0);
   pop();
@@ -553,8 +575,8 @@ function drawNNScene() {
 // 初始場景繪製（gameScene 0 使用）
 //------------------------------
 function drawBaseScene() {
-  // 使用 alienlabImg 為背景呈現初始對話（s 陣列）
-  drawDialogue(alienlabImg);
+  // 初始場景也在牢籠中，故使用帶欄杆的對話呈現
+  drawDialogueWithBars(alienlabImg);
 }
 
 //------------------------------
@@ -563,7 +585,6 @@ function drawBaseScene() {
 function draw() {
   background(0);
   if (sceneNumber === 0) {
-    // 封面：只接受空白鍵啟動
     image(startImg, 0, 0);
     fill(255);
     textSize(30);
@@ -576,17 +597,17 @@ function draw() {
       case 1: drawScene(a[u], alienlabImg); break;
       case 2: drawScene(d[y], alienlabImg); break;
       case 3: drawScene(g[ee], null); break;
-      case 4: drawScene(f[r], withoutalienlabImg); break;
-      case 5: drawScene(h[t], withoutalienlabImg); break;
+      case 4: drawSceneWithBars(f[r], withoutalienlabImg); break;
+      case 5: drawSceneWithBars(h[t], withoutalienlabImg); break;
       case 6: drawScene(j[qq], aliencrowd1Img); break;
       case 7: drawScene(k[aa], aliencrowdImg); break;
       case 8: drawScene(l[b], aliencrowdImg); break;
       case 9: drawScene(q[c], aliencrowdImg); break;
-      case 10: drawScene(w[dd], alienlabImg); break;
+      case 10: drawSceneWithBars(w[dd], alienlabImg); break;
       case 11: drawTranquilizerScene(); break;
       case 12: drawBBScene(); break;
       case 13: drawScene(ss[sss], withoutalienlabImg); break;
-      case 14: drawScene(ii[iii], withoutalienlabImg); break;
+      case 14: drawSceneWithBars(ii[iii], withoutalienlabImg); break;
       case 15: drawScene(oo[ooo], ruin2Img); break;
       case 16: drawScene(cc[ccc], ruinImg); break;
       case 17: drawJJScene(); break;
@@ -595,6 +616,12 @@ function draw() {
       case 20: drawHHScene(); break;
       case 21: drawNNScene(); break;
       case 22: drawScene(mm[mmm], meerkatImg); break;
+      case 23:
+        background(0);
+        fill(255);
+        textSize(30);
+        text("End", width/2 - 30, height/2);
+        break;
     }
   }
 }
