@@ -122,8 +122,8 @@ function setup() {
 
   a[1] = "'Hey! What do you want?'";
   a[2] = "...";
-  a[3] = "They just keep staring at me without saying anything.";
-  a[4] = "press [z] to sit in the corner and observe";
+  a[3] = "They just keep staring at me without saying anything...";
+  a[4] = "I sat in the corner, trying to figure out what they might do next.";
 
   d[1] = "I'll just wait and see what's going to happen.";
   d[2] = "press [z] to sit in the corner and observe";
