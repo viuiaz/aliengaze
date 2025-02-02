@@ -360,7 +360,7 @@ class Textbox {
     stroke(255);
     fill(0);
     // 調整文字框上移：將 y 座標由 330 改為 300；高度設為 50
-    rect(15, 300, 680, 50);
+    rect(15, 300, 680, 80);
     noStroke();
     fill(255);
     textSize(14);
@@ -500,7 +500,7 @@ function drawDialogueWithBars(bgImg) {
     prompt = "- click to continue -";
   }
   text(prompt, 248, 40);
-  text(currentText, 28, 350);
+  text(currentText, 28, 320);
 }
 
 //------------------------------
